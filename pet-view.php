@@ -25,6 +25,19 @@ if(!$pet) {
 }
 ?>
 
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+#map {
+    height: 350px !important;
+    min-height: 350px !important;
+    width: 100%;
+    border-radius: 8px;
+    border: 2px solid #3c8dbc;
+}
+</style>
+
 <section class="content-header">
     <h1>Pet Details</h1>
 </section>
@@ -35,42 +48,69 @@ if(!$pet) {
 
 <div class="row">
 
-<div class="col-md-4">
-    <img src="assets/uploads/pets/<?php echo $pet['pet_image']; ?>" class="img-responsive" style="border-radius:8px;">
+    <!-- PET IMAGE -->
+    <div class="col-md-4">
+        <img src="assets/uploads/pets/<?php echo $pet['pet_image']; ?>" class="img-responsive" style="border-radius:8px;">
+    </div>
+
+    <!-- PET INFO -->
+    <div class="col-md-8">
+
+        <table class="table table-bordered">
+
+            <tr><th>Pet Name</th><td><?php echo $pet['pet_name']; ?></td></tr>
+            <tr><th>Type</th><td><?php echo $pet['pet_type']; ?></td></tr>
+            <tr><th>Breed</th><td><?php echo $pet['pet_breed']; ?></td></tr>
+            <tr><th>Age</th><td><?php echo $pet['pet_age']; ?></td></tr>
+            <tr><th>Weight (lbs)</th><td><?php echo $pet['weight_lbs']; ?></td></tr>
+            <tr><th>Daily Goal (min)</th><td><?php echo $pet['daily_goal_minutes']; ?></td></tr>
+
+            <tr><th>Owner</th><td><?php echo $pet['owner_name']; ?></td></tr>
+            <tr><th>Phone</th><td><?php echo $pet['owner_phone']; ?></td></tr>
+            <tr><th>Area</th><td><?php echo $pet['owner_area']; ?></td></tr>
+            <tr><th>Location</th><td><?php echo $pet['owner_location']; ?></td></tr>
+
+        </table>
+
+    </div>
 </div>
 
-<div class="col-md-8">
+<hr>
 
-<table class="table table-bordered">
+<h4>Pet Location</h4>
+<div id="map"></div>
 
-<tr><th>Pet Name</th><td><?php echo $pet['pet_name']; ?></td></tr>
-<tr><th>Type</th><td><?php echo $pet['pet_type']; ?></td></tr>
-<tr><th>Breed</th><td><?php echo $pet['pet_breed']; ?></td></tr>
-<tr><th>Age</th><td><?php echo $pet['pet_age']; ?></td></tr>
-
-<tr><th>Weight (lbs)</th><td><?php echo $pet['weight_lbs']; ?></td></tr>
-<tr><th>Daily Goal (min)</th><td><?php echo $pet['daily_goal_minutes']; ?></td></tr>
-
-<tr><th>Owner</th><td><?php echo $pet['owner_name']; ?></td></tr>
-<tr><th>Phone</th><td><?php echo $pet['owner_phone']; ?></td></tr>
-<tr><th>Area</th><td><?php echo $pet['owner_area']; ?></td></tr>
-<tr><th>Location</th><td><?php echo $pet['owner_location']; ?></td></tr>
-
-<tr>
-<th>Coordinates</th>
-<td>
-<?php echo $pet['pet_latitude']; ?> , <?php echo $pet['pet_longitude']; ?>
-</td>
-</tr>
-
-</table>
-
-</div>
-</div>
-
-</div>
 </div>
 </div>
 </section>
 
 <?php require_once('footer.php'); ?>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Safe fallback coordinates (Kathmandu)
+    var lat = <?php echo (!empty($pet['pet_latitude'])) ? $pet['pet_latitude'] : 27.7172; ?>;
+    var lng = <?php echo (!empty($pet['pet_longitude'])) ? $pet['pet_longitude'] : 85.3240; ?>;
+
+    // Create map
+    var map = L.map('map').setView([lat, lng], 13);
+
+    // Load tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: ''
+    }).addTo(map);
+
+    // Marker
+    L.marker([lat, lng]).addTo(map);
+
+    // FIX for AdminLTE / hidden layout issue
+    setTimeout(function () {
+        map.invalidateSize();
+    }, 200);
+
+});
+</script>

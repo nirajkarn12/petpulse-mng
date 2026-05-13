@@ -1,0 +1,11 @@
+
+**Database Name: petpulse**
+
+**Developed by nirajkarna**
+
+**Recommended PHP Version 8.3.14**
+
+**Admin Login Details**
+
+Email   : admin@admin.com
+Password: 123456789

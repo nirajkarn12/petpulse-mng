@@ -84,12 +84,12 @@ if(isset($_POST['form2'])) {
 	if($valid == 1) {
 
 		if($_SESSION['owner']['owner_photo']!='') {
-			unlink('assets/uploads/owners/'.$_SESSION['owner']['owner_photo']);
+			unlink('../admin/assets/uploads/owners/'.$_SESSION['owner']['owner_photo']);
 		}
 
 		$final_name = 'owner-'.$_SESSION['owner']['owner_id'].'.'.$ext;
 
-		move_uploaded_file($path_tmp, 'assets/uploads/owners/'.$final_name);
+		move_uploaded_file($path_tmp, '../admin/assets/uploads/owners/'.$final_name);
 
 		$_SESSION['owner']['owner_photo'] = $final_name;
 
@@ -193,7 +193,7 @@ foreach ($result as $row) {
 <label class="col-sm-2 control-label">Existing Photo</label>
 
 <div class="col-sm-6" style="padding-top:6px;">
-<img src="assets/uploads/owners/<?php echo $photo; ?>" class="existing-photo" width="140">
+<img src="../admin/assets/uploads/owners/<?php echo $photo; ?>" class="existing-photo" width="140">
 </div>
 </div>
 

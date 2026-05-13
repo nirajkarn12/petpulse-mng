@@ -65,7 +65,7 @@ if(!isset($_SESSION['owner'])) {
 					<ul class="nav navbar-nav">
 						<li class="dropdown user user-menu">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<img src="assets/uploads/<?php echo $_SESSION['owner']['owner_photo']; ?>" class="user-image" alt="User Image">
+								<img src="../admin/assets/uploads/owners/<?php echo $_SESSION['owner']['owner_photo']; ?>" class="user-image" alt="User Image">
 								<span class="hidden-xs"><?php echo $_SESSION['owner']['owner_name']; ?></span>
 							</a>
 							<ul class="dropdown-menu">

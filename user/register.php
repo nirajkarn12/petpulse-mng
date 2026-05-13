@@ -316,6 +316,13 @@ textarea:focus{
             Register
         </button>
 
+        <div style="text-align:center; margin-top:18px; color:#6b7280;">
+    Already have an account?
+    <a href="login.php" style="color:#f5a623; text-decoration:none; font-weight:600;">
+        Login Here
+    </a>
+</div>
+
     </form>
 </div>
 

@@ -156,7 +156,7 @@ $i++;
         '<?php echo addslashes($row['pet_name']); ?>'
     )">
 
-    <i class="fa fa-map-marker"></i> Gps Traker
+    <i class="fa fa-map-marker"></i> location
 
 </button>
 

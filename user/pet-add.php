@@ -1,4 +1,74 @@
-<?php require_once('header.php'); ?>
+<?php
+require_once('header.php');
+
+// ========== OWNER SESSION CHECK ==========
+if(!isset($_SESSION['owner'])) {
+    header('location: login.php');
+    exit;
+}
+$owner_id = $_SESSION['owner']['owner_id'];
+
+$error_message   = '';
+$success_message = '';
+
+if(isset($_POST['form1'])) {
+    $valid = 1;
+
+    // Validation (owner_id is NOT taken from form)
+    if(empty($_POST['pet_name'])) {
+        $valid = 0;
+        $error_message .= "Pet name cannot be empty<br>";
+    }
+
+    if(empty($_POST['pet_type'])) {
+        $valid = 0;
+        $error_message .= "Pet type cannot be empty<br>";
+    }
+
+    // Sanitize lat/lng (exactly as original)
+    $pet_latitude  = !empty($_POST['pet_latitude'])  ? (float)$_POST['pet_latitude']  : null;
+    $pet_longitude = !empty($_POST['pet_longitude']) ? (float)$_POST['pet_longitude'] : null;
+
+    if ($pet_latitude !== null && ($pet_latitude < -90 || $pet_latitude > 90)) {
+        $valid = 0;
+        $error_message .= "Invalid latitude value<br>";
+    }
+    if ($pet_longitude !== null && ($pet_longitude < -180 || $pet_longitude > 180)) {
+        $valid = 0;
+        $error_message .= "Invalid longitude value<br>";
+    }
+
+    if($valid == 1) {
+        // INSERT with original columns – NO pet_location_text
+        $statement = $pdo->prepare("INSERT INTO tbl_pet (
+            owner_id,
+            pet_name,
+            pet_type,
+            pet_breed,
+            pet_age,
+            pet_latitude,
+            pet_longitude
+        ) VALUES (?,?,?,?,?,?,?)");
+        $statement->execute([
+            $owner_id,  // from session, not from POST
+            $_POST['pet_name'],
+            $_POST['pet_type'],
+            $_POST['pet_breed'],
+            !empty($_POST['pet_age']) ? (int)$_POST['pet_age'] : null,
+            $pet_latitude,
+            $pet_longitude
+        ]);
+
+        // Update no_of_pets count in tbl_owner
+        $update = $pdo->prepare("UPDATE tbl_owner SET no_of_pets = (
+            SELECT COUNT(*) FROM tbl_pet WHERE owner_id = ?
+        ) WHERE owner_id = ?");
+        $update->execute([$owner_id, $owner_id]);
+
+        $success_message = 'Pet added successfully.';
+    }
+}
+?>
 
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -53,73 +123,6 @@
     }
 </style>
 
-<?php
-$error_message   = '';
-$success_message = '';
-
-if(isset($_POST['form1'])) {
-    $valid = 1;
-
-    if(empty($_POST['owner_id'])) {
-        $valid = 0;
-        $error_message .= "You must select an owner<br>";
-    }
-
-    if(empty($_POST['pet_name'])) {
-        $valid = 0;
-        $error_message .= "Pet name cannot be empty<br>";
-    }
-
-    if(empty($_POST['pet_type'])) {
-        $valid = 0;
-        $error_message .= "Pet type cannot be empty<br>";
-    }
-
-    // Sanitize lat/lng
-    $pet_latitude  = !empty($_POST['pet_latitude'])  ? (float)$_POST['pet_latitude']  : null;
-    $pet_longitude = !empty($_POST['pet_longitude']) ? (float)$_POST['pet_longitude'] : null;
-
-    // Basic range check
-    if ($pet_latitude !== null && ($pet_latitude < -90 || $pet_latitude > 90)) {
-        $valid = 0;
-        $error_message .= "Invalid latitude value<br>";
-    }
-    if ($pet_longitude !== null && ($pet_longitude < -180 || $pet_longitude > 180)) {
-        $valid = 0;
-        $error_message .= "Invalid longitude value<br>";
-    }
-
-    if($valid == 1) {
-        $statement = $pdo->prepare("INSERT INTO tbl_pet (
-            owner_id,
-            pet_name,
-            pet_type,
-            pet_breed,
-            pet_age,
-            pet_latitude,
-            pet_longitude
-        ) VALUES (?,?,?,?,?,?,?)");
-        $statement->execute([
-            $_POST['owner_id'],
-            $_POST['pet_name'],
-            $_POST['pet_type'],
-            $_POST['pet_breed'],
-            !empty($_POST['pet_age']) ? (int)$_POST['pet_age'] : null,
-            $pet_latitude,
-            $pet_longitude
-        ]);
-
-        // Update no_of_pets count in tbl_owner
-        $statement = $pdo->prepare("UPDATE tbl_owner SET no_of_pets = (
-            SELECT COUNT(*) FROM tbl_pet WHERE owner_id = ?
-        ) WHERE owner_id = ?");
-        $statement->execute([$_POST['owner_id'], $_POST['owner_id']]);
-
-        $success_message = 'Pet added successfully.';
-    }
-}
-?>
-
 <section class="content-header">
     <div class="content-header-left">
         <h1>Add Pet</h1>
@@ -145,25 +148,8 @@ if(isset($_POST['form1'])) {
                 <div class="box box-info">
                     <div class="box-body">
 
-                        <!-- Owner -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Owner <span>*</span></label>
-                            <div class="col-sm-4">
-                                <select name="owner_id" class="form-control select2">
-                                    <option value="">-- Select Owner --</option>
-                                    <?php
-                                    $statement = $pdo->prepare("SELECT owner_id, owner_name, owner_area FROM tbl_owner WHERE is_active=1 ORDER BY owner_name ASC");
-                                    $statement->execute();
-                                    $owners = $statement->fetchAll(PDO::FETCH_ASSOC);
-                                    foreach($owners as $owner) {
-                                    ?>
-                                    <option value="<?php echo $owner['owner_id']; ?>">
-                                        <?php echo htmlspecialchars($owner['owner_name']); ?> — <?php echo htmlspecialchars($owner['owner_area']); ?>
-                                    </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
+                        <!-- ===== NO OWNER DROPDOWN ===== -->
+                        <!-- Owner is automatically taken from logged-in session -->
 
                         <!-- Pet Name -->
                         <div class="form-group">
@@ -209,22 +195,11 @@ if(isset($_POST['form1'])) {
                             </div>
                         </div>
 
-                        <!-- ===== LOCATION SECTION ===== -->
+                        <!-- ===== LOCATION SECTION (only lat/lng, no text column) ===== -->
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <hr style="border-color:#d0e8f5;">
-                                <div class="location-section-label"><i class="fa fa-map-marker"></i>&nbsp; Pet Location</div>
-                            </div>
-                        </div>
-
-                        <!-- Text Location -->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Location (Text)</label>
-                            <div class="col-sm-5">
-                                <input type="text" name="pet_location_text" id="pet_location_text" class="form-control"
-                                    placeholder="e.g. Near Central Park, Block 5"
-                                    value="<?php echo isset($_POST['pet_location_text']) ? htmlspecialchars($_POST['pet_location_text']) : ''; ?>">
-                                <span class="help-block" style="font-size:11px;">Optional: describe the location in words</span>
+                                <div class="location-section-label"><i class="fa fa-map-marker"></i>&nbsp; Pet Location (Optional)</div>
                             </div>
                         </div>
 
@@ -298,12 +273,10 @@ if(isset($_POST['form1'])) {
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function() {
-    // Default center: try to use a sensible default (world center)
     var defaultLat = 20.0;
     var defaultLng = 0.0;
     var defaultZoom = 2;
 
-    // If coords already set (form re-submit), center there
     var existingLat = parseFloat(document.getElementById('pet_latitude').value);
     var existingLng = parseFloat(document.getElementById('pet_longitude').value);
     if (!isNaN(existingLat) && !isNaN(existingLng)) {
@@ -313,7 +286,6 @@ if(isset($_POST['form1'])) {
     }
 
     var map = L.map('map').setView([defaultLat, defaultLng], defaultZoom);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
@@ -324,7 +296,6 @@ if(isset($_POST['form1'])) {
     function setMarker(lat, lng) {
         lat = parseFloat(lat.toFixed(7));
         lng = parseFloat(lng.toFixed(7));
-
         if (marker) {
             marker.setLatLng([lat, lng]);
         } else {
@@ -338,35 +309,29 @@ if(isset($_POST['form1'])) {
     }
 
     function updateCoords(lat, lng) {
-        document.getElementById('pet_latitude').value  = lat.toFixed(7);
+        document.getElementById('pet_latitude').value = lat.toFixed(7);
         document.getElementById('pet_longitude').value = lng.toFixed(7);
     }
 
-    // Click on map to set marker
     map.on('click', function(e) {
         setMarker(e.latlng.lat, e.latlng.lng);
-        map.setView([e.latlng.lat, e.latlng.lng], map.getZoom() < 12 ? 14 : map.getZoom());
+        if (map.getZoom() < 12) map.setZoom(14);
     });
 
-    // If existing coords, place marker immediately
     if (!isNaN(existingLat) && !isNaN(existingLng)) {
         setMarker(existingLat, existingLng);
     }
 
-    // Clear location
     document.getElementById('clearLocationBtn').addEventListener('click', function() {
         if (marker) {
             map.removeLayer(marker);
             marker = null;
         }
-        document.getElementById('pet_latitude').value  = '';
+        document.getElementById('pet_latitude').value = '';
         document.getElementById('pet_longitude').value = '';
     });
 
-    // Map search using Nominatim (OpenStreetMap geocoding)
-    document.getElementById('mapSearchBtn').addEventListener('click', function() {
-        searchLocation();
-    });
+    document.getElementById('mapSearchBtn').addEventListener('click', function() { searchLocation(); });
     document.getElementById('mapSearchInput').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') { e.preventDefault(); searchLocation(); }
     });
@@ -374,11 +339,9 @@ if(isset($_POST['form1'])) {
     function searchLocation() {
         var query = document.getElementById('mapSearchInput').value.trim();
         if (!query) return;
-
         var btn = document.getElementById('mapSearchBtn');
         btn.disabled = true;
         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-
         fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query) + '&limit=1', {
             headers: { 'Accept': 'application/json' }
         })
@@ -393,16 +356,13 @@ if(isset($_POST['form1'])) {
                 alert('Location not found. Try a different search term.');
             }
         })
-        .catch(function() {
-            alert('Search failed. Please check your connection.');
-        })
+        .catch(function() { alert('Search failed. Please check your connection.'); })
         .finally(function() {
             btn.disabled = false;
             btn.innerHTML = '<i class="fa fa-search"></i> Find';
         });
     }
 
-    // Try to use browser geolocation to center map on first load
     if (isNaN(existingLat) && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(pos) {
             map.setView([pos.coords.latitude, pos.coords.longitude], 13);

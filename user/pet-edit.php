@@ -170,22 +170,24 @@ if(isset($_POST['form1'])) {
 
 <form class="form-horizontal" method="post" enctype="multipart/form-data">
 
-<!-- OWNER -->
+
+<!-- OWNER (read only) -->
 <div class="form-group">
-<label class="col-sm-3 control-label">Owner</label>
-<div class="col-sm-4">
-<select name="owner_id" class="form-control">
-<option value="">Select</option>
-<?php
-$owners = $pdo->query("SELECT * FROM tbl_owner WHERE is_active=1")->fetchAll(PDO::FETCH_ASSOC);
-foreach($owners as $o){
-?>
-<option value="<?php echo $o['owner_id']; ?>" <?php if($o['owner_id']==$owner_id) echo 'selected'; ?>>
-<?php echo $o['owner_name']; ?>
-</option>
-<?php } ?>
-</select>
-</div>
+    <label class="col-sm-3 control-label">Owner</label>
+    <div class="col-sm-4">
+        <select class="form-control" disabled>
+            <option value="">Select</option>
+            <?php
+            $owners = $pdo->query("SELECT * FROM tbl_owner WHERE is_active=1")->fetchAll(PDO::FETCH_ASSOC);
+            foreach($owners as $o){
+                $selected = ($o['owner_id'] == $owner_id) ? 'selected' : '';
+                echo "<option value=\"{$o['owner_id']}\" $selected>{$o['owner_name']}</option>";
+            }
+            ?>
+        </select>
+        <!-- Hidden field submits the actual owner_id -->
+        <input type="hidden" name="owner_id" value="<?php echo htmlspecialchars($owner_id); ?>">
+    </div>
 </div>
 
 <!-- PHOTO -->

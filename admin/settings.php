@@ -85,21 +85,43 @@ if(isset($_POST['form2'])) {
 }
 //Footer & Contact us page
 if(isset($_POST['form3'])) {
-    
-    // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET newsletter_on_off=?, footer_copyright=?, contact_address=?, contact_email=?, contact_phone=?, contact_map_iframe=? WHERE id=1");
-    $statement->execute(array($_POST['newsletter_on_off'],$_POST['footer_copyright'],$_POST['contact_address'],$_POST['contact_email'],$_POST['contact_phone'],$_POST['contact_map_iframe']));
+    $valid = 1;
 
-    $success_message = 'General content settings is updated successfully.';
+    if(!empty($_POST['contact_email']) && !is_valid_email_address($_POST['contact_email'])) {
+        $valid = 0;
+        $error_message .= 'Contact email address must be valid<br>';
+    }
+
+    if(!empty($_POST['contact_phone']) && !is_valid_phone_number($_POST['contact_phone'])) {
+        $valid = 0;
+        $error_message .= 'Contact phone number must be valid<br>';
+    }
+
+    if($valid == 1) {
+        // updating the database
+        $statement = $pdo->prepare("UPDATE tbl_settings SET newsletter_on_off=?, footer_copyright=?, contact_address=?, contact_email=?, contact_phone=?, contact_map_iframe=? WHERE id=1");
+        $statement->execute(array($_POST['newsletter_on_off'],$_POST['footer_copyright'],$_POST['contact_address'],$_POST['contact_email'],$_POST['contact_phone'],$_POST['contact_map_iframe']));
+
+        $success_message = 'General content settings is updated successfully.';
+    }
     
 }
 //Email Settings
 if(isset($_POST['form4'])) {
-    // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET receive_email=?, receive_email_subject=?,receive_email_thank_you_message=?, forget_password_message=? WHERE id=1");
-    $statement->execute(array($_POST['receive_email'],$_POST['receive_email_subject'],$_POST['receive_email_thank_you_message'],$_POST['forget_password_message']));
+    $valid = 1;
 
-    $success_message = 'Contact form settings information is updated successfully.';
+    if(!empty($_POST['receive_email']) && !is_valid_email_address($_POST['receive_email'])) {
+        $valid = 0;
+        $error_message .= 'Contact email address must be valid<br>';
+    }
+
+    if($valid == 1) {
+        // updating the database
+        $statement = $pdo->prepare("UPDATE tbl_settings SET receive_email=?, receive_email_subject=?,receive_email_thank_you_message=?, forget_password_message=? WHERE id=1");
+        $statement->execute(array($_POST['receive_email'],$_POST['receive_email_subject'],$_POST['receive_email_thank_you_message'],$_POST['forget_password_message']));
+
+        $success_message = 'Contact form settings information is updated successfully.';
+    }
 }
 
 //Can not finish this section, leave it
@@ -738,6 +760,11 @@ if(isset($_POST['form9'])) {
     $valid = 1;
     $qr_code_old = ''; 
 
+    if(!empty($_POST['paypal_email']) && !is_valid_email_address($_POST['paypal_email'])) {
+        $valid = 0;
+        $error_message .= 'PayPal email address must be valid<br>';
+    }
+
     // Get existing QR code from DB to keep it if no new upload
     $stmt = $pdo->prepare("SELECT qr_code FROM tbl_settings WHERE id=1");
     $stmt->execute();
@@ -1019,13 +1046,13 @@ foreach ($result as $row) {
                                     <div class="form-group">
                                         <label for="" class="col-sm-2 control-label">Contact Email </label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" name="contact_email" value="<?php echo $contact_email; ?>">
+                                            <input type="email" class="form-control" name="contact_email" value="<?php echo $contact_email; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="" class="col-sm-2 control-label">Contact Phone Number </label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" name="contact_phone" value="<?php echo $contact_phone; ?>">
+                                            <input type="text" class="form-control" name="contact_phone" value="<?php echo $contact_phone; ?>" pattern="\+?[0-9][0-9\s().-]{6,19}" title="Enter a valid phone number">
                                         </div>
                                     </div>
                                  <!-- <div class="form-group">
@@ -1061,7 +1088,7 @@ foreach ($result as $row) {
                                     <div class="form-group">
                                         <label for="" class="col-sm-3 control-label">Contact Email Address</label>
                                         <div class="col-sm-4">
-                                            <input type="text" class="form-control" name="receive_email" value="<?php echo $receive_email; ?>">
+                                            <input type="email" class="form-control" name="receive_email" value="<?php echo $receive_email; ?>">
                                         </div>
                                     </div>                                  
                                     <div class="form-group">
@@ -1604,7 +1631,7 @@ foreach ($result as $row) {
                                         <div class="form-group">
                                             <label for="" class="col-sm-2 control-label">PayPal - Business Email </label>
                                             <div class="col-sm-5">
-                                                <input type="text" name="paypal_email" class="form-control" value="<?php echo $paypal_email; ?>">
+                                                <input type="email" name="paypal_email" class="form-control" value="<?php echo $paypal_email; ?>">
                                             </div>
                                         </div>
                                         <div class="form-group">

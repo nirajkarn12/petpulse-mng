@@ -11,6 +11,8 @@ if(isset($_POST['form1'])) {
 
     if(empty($_POST['email']) || empty($_POST['password'])) {
         $error_message = 'Email and/or Password cannot be empty<br>';
+    } elseif(!is_valid_email_address($_POST['email'])) {
+        $error_message = 'Email address must be valid<br>';
     } else {
 
         $email = strip_tags($_POST['email']);

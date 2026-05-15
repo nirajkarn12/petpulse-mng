@@ -14,6 +14,14 @@ if(isset($_POST['form1'])) {
     if(empty($_POST['owner_phone'])) {
         $valid = 0;
         $error_message .= "Phone number cannot be empty<br>";
+    } elseif(!is_valid_phone_number($_POST['owner_phone'])) {
+        $valid = 0;
+        $error_message .= "Phone number must be valid<br>";
+    }
+
+    if(!empty($_POST['owner_email']) && !is_valid_email_address($_POST['owner_email'])) {
+        $valid = 0;
+        $error_message .= "Email address must be valid<br>";
     }
 
     if(empty($_POST['owner_area'])) {
@@ -142,7 +150,7 @@ if(isset($_POST['form1'])) {
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Phone <span>*</span></label>
                             <div class="col-sm-4">
-                                <input type="text" name="owner_phone" class="form-control">
+                                <input type="text" name="owner_phone" class="form-control" pattern="\+?[0-9][0-9\s().-]{6,19}" title="Enter a valid phone number">
                             </div>
                         </div>
 

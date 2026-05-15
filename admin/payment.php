@@ -15,30 +15,35 @@ if(isset($_POST['send_email'])){
 	$subject = $_POST['subject'];
 	$message = $_POST['message'];
 
-	$mail = new PHPMailer(true);
+	if(!is_valid_email_address($email)) {
+		$error_message .= 'Recipient email address must be valid<br>';
+		echo "<script>alert('Recipient email address must be valid');</script>";
+	} else {
+		$mail = new PHPMailer(true);
 
-	try {
-		$mail->isSMTP();
-		$mail->Host = 'smtp.gmail.com';
-		$mail->SMTPAuth = true;
-		$mail->Username = 'noreply.test.plz@gmail.com';
-		$mail->Password = 'fvcgxwtpfkljghvp';
-		$mail->SMTPSecure = 'ssl';
-		$mail->Port = 465;
+		try {
+			$mail->isSMTP();
+			$mail->Host = 'smtp.gmail.com';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'noreply.test.plz@gmail.com';
+			$mail->Password = 'fvcgxwtpfkljghvp';
+			$mail->SMTPSecure = 'ssl';
+			$mail->Port = 465;
 
-		$mail->setFrom('hello@example.com', 'PetPulse');
-		$mail->addAddress($email);
+			$mail->setFrom('hello@example.com', 'PetPulse');
+			$mail->addAddress($email);
 
-		$mail->isHTML(true);
-		$mail->Subject = $subject;
-		$mail->Body = nl2br($message);
+			$mail->isHTML(true);
+			$mail->Subject = $subject;
+			$mail->Body = nl2br($message);
 
-		$mail->send();
+			$mail->send();
 
-		echo "<script>alert('Email sent successfully');</script>";
+			echo "<script>alert('Email sent successfully');</script>";
 
-	} catch (Exception $e) {
-		echo "<script>alert('Email failed: {$mail->ErrorInfo}');</script>";
+		} catch (Exception $e) {
+			echo "<script>alert('Email failed: {$mail->ErrorInfo}');</script>";
+		}
 	}
 }
 ?>

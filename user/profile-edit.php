@@ -15,7 +15,7 @@ if(isset($_POST['form1'])) {
 		$error_message .= 'Email address can not be empty<br>';
 	} else {
 
-		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) === false) {
+		if (!is_valid_email_address($_POST['email'])) {
 			$valid = 0;
 			$error_message .= 'Email address must be valid<br>';
 		} else {
@@ -38,6 +38,11 @@ if(isset($_POST['form1'])) {
 				$error_message .= 'Email address already exists<br>';
 			}
 		}
+	}
+
+	if(!empty($_POST['phone']) && !is_valid_phone_number($_POST['phone'])) {
+		$valid = 0;
+		$error_message .= 'Phone number must be valid<br>';
 	}
 
 	if($valid == 1) {
@@ -209,7 +214,7 @@ foreach ($result as $row) {
 <label class="col-sm-2 control-label">Phone</label>
 
 <div class="col-sm-4">
-<input type="text" class="form-control" name="phone" value="<?php echo $phone; ?>">
+<input type="text" class="form-control" name="phone" value="<?php echo $phone; ?>" pattern="\+?[0-9][0-9\s().-]{6,19}" title="Enter a valid phone number">
 </div>
 </div>
 

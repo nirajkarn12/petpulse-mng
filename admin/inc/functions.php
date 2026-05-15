@@ -50,3 +50,18 @@ function get_ai_id($pdo,$tbl_name)
 	}
 	return $next_id;
 }
+
+function is_valid_email_address($email)
+{
+	return filter_var(trim($email), FILTER_VALIDATE_EMAIL) !== false;
+}
+
+function is_valid_phone_number($phone)
+{
+	$phone = trim($phone);
+	$digits = preg_replace('/\D/', '', $phone);
+
+	return preg_match('/^\+?[0-9][0-9\s().-]*$/', $phone)
+		&& strlen($digits) >= 7
+		&& strlen($digits) <= 15;
+}

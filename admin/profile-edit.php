@@ -16,7 +16,7 @@ if(isset($_POST['form1'])) {
 	        $valid = 0;
 	        $error_message .= 'Email address can not be empty<br>';
 	    } else {
-	    	if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) === false) {
+	    	if (!is_valid_email_address($_POST['email'])) {
 		        $valid = 0;
 		        $error_message .= 'Email address must be valid<br>';
 		    } else {
@@ -38,6 +38,11 @@ if(isset($_POST['form1'])) {
 		    }
 	    }
 
+	    if(!empty($_POST['phone']) && !is_valid_phone_number($_POST['phone'])) {
+	        $valid = 0;
+	        $error_message .= 'Phone number must be valid<br>';
+	    }
+
 	    if($valid == 1) {
 			
 			$_SESSION['user']['full_name'] = $_POST['full_name'];
@@ -51,13 +56,22 @@ if(isset($_POST['form1'])) {
 	    }
 	}
 	else {
-		$_SESSION['user']['phone'] = $_POST['phone'];
+		$valid = 1;
 
-		// updating the database
-		$statement = $pdo->prepare("UPDATE tbl_user SET phone=? WHERE id=?");
-		$statement->execute(array($_POST['phone'],$_SESSION['user']['id']));
+		if(!empty($_POST['phone']) && !is_valid_phone_number($_POST['phone'])) {
+			$valid = 0;
+			$error_message .= 'Phone number must be valid<br>';
+		}
 
-		$success_message = 'User Information is updated successfully.';	
+		if($valid == 1) {
+			$_SESSION['user']['phone'] = $_POST['phone'];
+
+			// updating the database
+			$statement = $pdo->prepare("UPDATE tbl_user SET phone=? WHERE id=?");
+			$statement->execute(array($_POST['phone'],$_SESSION['user']['id']));
+
+			$success_message = 'User Information is updated successfully.';
+		}
 	}
 }
 
@@ -213,7 +227,7 @@ foreach ($result as $row) {
 									<div class="form-group">
 										<label for="" class="col-sm-2 control-label">Phone </label>
 										<div class="col-sm-4">
-											<input type="text" class="form-control" name="phone" value="<?php echo $phone; ?>">
+											<input type="text" class="form-control" name="phone" value="<?php echo $phone; ?>" pattern="\+?[0-9][0-9\s().-]{6,19}" title="Enter a valid phone number">
 										</div>
 									</div>
 									<div class="form-group">

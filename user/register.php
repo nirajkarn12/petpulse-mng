@@ -24,11 +24,17 @@ if(isset($_POST['form1'])) {
     if(empty($_POST['owner_phone'])) {
         $valid = 0;
         $error_message .= 'Phone number is required<br>';
+    } elseif(!is_valid_phone_number($_POST['owner_phone'])) {
+        $valid = 0;
+        $error_message .= 'Phone number must be valid<br>';
     }
 
     if(empty($_POST['owner_email'])) {
         $valid = 0;
         $error_message .= 'Email is required<br>';
+    } elseif(!is_valid_email_address($_POST['owner_email'])) {
+        $valid = 0;
+        $error_message .= 'Email address must be valid<br>';
     }
 
     if(empty($_POST['password'])) {
@@ -289,7 +295,7 @@ textarea:focus{
         </div>
 
         <div class="form-group">
-            <input type="text" name="owner_phone" placeholder="Phone Number">
+            <input type="text" name="owner_phone" placeholder="Phone Number" pattern="\+?[0-9][0-9\s().-]{6,19}" title="Enter a valid phone number">
         </div>
 
         <div class="form-group">

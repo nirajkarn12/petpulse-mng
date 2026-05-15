@@ -37,7 +37,16 @@ if(isset($_POST['form1'])) {
     $valid = 1;
 
     if(empty($_POST['owner_name'])) $valid = 0;
-    if(empty($_POST['owner_phone'])) $valid = 0;
+    if(empty($_POST['owner_phone'])) {
+        $valid = 0;
+    } elseif(!is_valid_phone_number($_POST['owner_phone'])) {
+        $valid = 0;
+        $error_message .= "Phone number must be valid<br>";
+    }
+    if(!empty($_POST['owner_email']) && !is_valid_email_address($_POST['owner_email'])) {
+        $valid = 0;
+        $error_message .= "Email address must be valid<br>";
+    }
     if(empty($_POST['owner_area'])) $valid = 0;
     if(empty($_POST['owner_location'])) $valid = 0;
 
@@ -177,7 +186,7 @@ if(isset($_POST['form1'])) {
 <div class="form-group">
 <label class="col-sm-3 control-label">Phone *</label>
 <div class="col-sm-4">
-<input type="text" name="owner_phone" class="form-control" value="<?php echo $owner['owner_phone']; ?>">
+<input type="text" name="owner_phone" class="form-control" value="<?php echo $owner['owner_phone']; ?>" pattern="\+?[0-9][0-9\s().-]{6,19}" title="Enter a valid phone number">
 </div>
 </div>
 

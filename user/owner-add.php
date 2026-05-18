@@ -154,7 +154,7 @@ if(isset($_POST['form1'])) {
                             </div>
                         </div>
 
-                        <!-- ✅ PASSWORD FIELD ADDED -->
+                        ✅ PASSWORD FIELD ADDED
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Password <span>*</span></label>
                             <div class="col-sm-4">
@@ -190,32 +190,49 @@ if(isset($_POST['form1'])) {
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Pets <span>*</span></label>
-                            <div class="col-sm-8">
-                                <table id="PetTable" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Pet Name</th>
-                                            <th>Type</th>
-                                            <th>Breed</th>
-                                            <th>Age</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="text" name="pet_name[]" class="form-control"></td>
-                                            <td><input type="text" name="pet_type[]" class="form-control"></td>
-                                            <td><input type="text" name="pet_breed[]" class="form-control"></td>
-                                            <td><input type="number" name="pet_age[]" class="form-control"></td>
-                                            <td><a href="javascript:void(0)" class="DeletePet btn btn-danger btn-xs">X</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <input type="button" id="btnAddPet" value="Add Pet" class="btn btn-warning btn-xs">
-                            </div>
-                        </div>
+                       <!-- HAS PETS -->
+<div class="form-group">
+    <label class="col-sm-3 control-label">Has Pets?</label>
+    <div class="col-sm-4">
+        <select name="has_pets" id="has_pets" class="form-control">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </select>
+    </div>
+</div>
+
+<!-- PET SECTION -->
+<div class="form-group" id="pet_section" style="display:none;">
+    <label class="col-sm-3 control-label">Pet Details</label>
+    <div class="col-sm-8">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Pet Name</th>
+                    <th>Type</th>
+                    <th>Breed</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" name="pet_name[]" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" name="pet_type[]" class="form-control">
+                    </td>
+                    <td>
+                        <input type="text" name="pet_breed[]" class="form-control">
+                    </td>
+                    <td>
+                        <input type="number" name="pet_age[]" class="form-control">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Is Active?</label>

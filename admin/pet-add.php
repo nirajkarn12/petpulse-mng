@@ -181,7 +181,7 @@ if(isset($_POST['form1'])) {
                                 <select name="pet_type" class="form-control select2">
                                     <option value="">-- Select Type --</option>
                                     <?php
-                                    $types = ['Dog','Cat','Bird','Rabbit','Fish','Hamster','Reptile','Other'];
+                                    $types = ['Dog','Cat','Other'];
                                     foreach($types as $t) {
                                         $sel = (isset($_POST['pet_type']) && $_POST['pet_type'] === $t) ? 'selected' : '';
                                         echo "<option value=\"$t\" $sel>$t</option>";

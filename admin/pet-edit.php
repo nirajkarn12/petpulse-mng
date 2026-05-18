@@ -220,7 +220,7 @@ foreach($owners as $o){
 <label class="col-sm-3 control-label">Type</label>
 <div class="col-sm-4">
 <select name="pet_type" class="form-control">
-<?php foreach(['Dog','Cat','Bird','Other'] as $t): ?>
+<?php foreach(['Dog','Cat','Other'] as $t): ?>
 <option value="<?php echo $t; ?>" <?php if($pet_type==$t) echo 'selected'; ?>><?php echo $t; ?></option>
 <?php endforeach; ?>
 </select>

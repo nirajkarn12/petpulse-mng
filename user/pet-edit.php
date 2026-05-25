@@ -49,6 +49,12 @@ if($statement->rowCount() == 0) {
 
 $row = $statement->fetch(PDO::FETCH_ASSOC);
 
+$session_owner_id = (int)$_SESSION['owner']['owner_id'];
+if ((int)$row['owner_id'] !== $session_owner_id) {
+    header('location: logout.php');
+    exit;
+}
+
 /* VARIABLES */
 $pet_name  = $row['pet_name'];
 $pet_type  = $row['pet_type'];
@@ -134,7 +140,7 @@ if(isset($_POST['form1'])) {
             WHERE pet_id=?");
 
         $statement->execute([
-            $_POST['owner_id'],
+            $session_owner_id,
             $_POST['pet_name'],
             $_POST['pet_type'],
             $_POST['pet_breed'],
@@ -145,6 +151,11 @@ if(isset($_POST['form1'])) {
             $pet_latitude,
             $pet_longitude,
             $_REQUEST['id']
+        ]);
+
+        owner_notify_db_change($pdo, 'updated', $session_owner_id, 'Pet', [
+            'pet_id' => (int)$_REQUEST['id'],
+            'details' => ' (' . $_POST['pet_name'] . ')',
         ]);
 
         $success_message = "Pet updated successfully";

@@ -4,6 +4,9 @@
     <div class="content-header-left">
         <h1>Device List</h1>
     </div>
+    <div class="content-header-right">
+        <a href="device-add.php" class="btn btn-primary btn-sm">Add Device</a>
+    </div>
 </section>
 
 <section class="content">
@@ -28,6 +31,7 @@
     <th>Heart</th>
     <th>Bluetooth</th>
     <th>Temp</th>
+    <th>Action</th>
 </tr>
 </thead>
 
@@ -52,58 +56,59 @@ foreach ($result as $row) {
 ?>
 <tr>
     <td><?php echo $i; ?></td>
-
     <td><?php echo htmlspecialchars($row['pet_name'] ?? 'N/A'); ?></td>
-
-    <td><?php echo htmlspecialchars($row['device_name']); ?></td>
-
-    <td><?php echo htmlspecialchars($row['mac_address']); ?></td>
-
-    <td><?php echo htmlspecialchars($row['firmware_version']); ?></td>
-
+    <td><?php echo htmlspecialchars($row['device_name'] ?? ''); ?></td>
+    <td><?php echo htmlspecialchars($row['mac_address'] ?? ''); ?></td>
+    <td><?php echo htmlspecialchars($row['firmware_version'] ?? ''); ?></td>
     <td>
         <?php
-        echo $row['storage_used_mb'] . ' / ' . $row['storage_total_mb'] . ' MB';
+        echo ($row['storage_used_mb'] ?? 0) . ' / ' . ($row['storage_total_mb'] ?? 0) . ' MB';
         ?>
     </td>
-
     <td>
-        <span class="label label-<?php echo ($row['battery_percent'] > 30 ? 'success' : 'danger'); ?>">
-            <?php echo $row['battery_percent']; ?>%
+        <span class="label label-<?php echo (($row['battery_percent'] ?? 0) > 30 ? 'success' : 'danger'); ?>">
+            <?php echo $row['battery_percent'] ?? 0; ?>%
         </span>
     </td>
-
     <td>
         <?php
-        echo $row['last_synced'] 
-            ? date('Y-m-d H:i', strtotime($row['last_synced'])) 
+        echo isset($row['last_synced']) && $row['last_synced']
+            ? date('Y-m-d H:i', strtotime($row['last_synced']))
             : '-';
         ?>
     </td>
 
-    <!-- STATUS BADGES -->
+    <!-- STATUS BADGES (fixed logic) -->
     <td>
-        <span class="label label-<?php echo ($row['gps_status'] ? 'success' : 'danger'); ?>">
-            <?php echo $row['gps_status'] ? 'ON' : 'OFF'; ?>
+        <span class="label label-<?php echo ($row['gps_status'] === 'Active' ? 'success' : 'danger'); ?>">
+            <?php echo ($row['gps_status'] === 'Active' ? 'ON' : 'OFF'); ?>
         </span>
     </td>
 
     <td>
-        <span class="label label-<?php echo ($row['heart_rate_status'] ? 'success' : 'danger'); ?>">
-            <?php echo $row['heart_rate_status'] ? 'ON' : 'OFF'; ?>
+        <span class="label label-<?php echo ($row['heart_rate_status'] === 'Logging' ? 'success' : 'danger'); ?>">
+            <?php echo ($row['heart_rate_status'] === 'Logging' ? 'ON' : 'OFF'); ?>
         </span>
     </td>
 
     <td>
-        <span class="label label-<?php echo ($row['bluetooth_status'] ? 'success' : 'danger'); ?>">
-            <?php echo $row['bluetooth_status'] ? 'ON' : 'OFF'; ?>
+        <span class="label label-<?php echo ($row['bluetooth_status'] === 'Connected' ? 'success' : 'danger'); ?>">
+            <?php echo ($row['bluetooth_status'] === 'Connected' ? 'ON' : 'OFF'); ?>
         </span>
     </td>
 
     <td>
-        <span class="label label-<?php echo ($row['temp_status'] ? 'success' : 'danger'); ?>">
-            <?php echo $row['temp_status'] ? 'ON' : 'OFF'; ?>
+        <span class="label label-<?php echo ($row['temp_status'] === 'Normal' ? 'success' : 'danger'); ?>">
+            <?php echo ($row['temp_status'] === 'Normal' ? 'ON' : 'OFF'); ?>
         </span>
+    </td>
+
+    <td>
+        <a href="device-edit.php?id=<?php echo (int)$row['id']; ?>" class="btn btn-primary btn-xs">Edit</a>
+        <a href="#" class="btn btn-danger btn-xs"
+            data-href="device-delete.php?id=<?php echo (int)$row['id']; ?>"
+            data-toggle="modal"
+            data-target="#confirm-delete">Delete</a>
     </td>
 
 </tr>
@@ -118,5 +123,28 @@ foreach ($result as $row) {
 </div>
 </div>
 </section>
+
+<div class="modal fade" id="confirm-delete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Delete Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this device?
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger btn-ok">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).on('click', '.btn-danger[data-href]', function() {
+    $('.btn-ok').attr('href', $(this).data('href'));
+});
+</script>
 
 <?php require_once('footer.php'); ?>

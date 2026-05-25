@@ -110,6 +110,11 @@ if(isset($_POST['form1'])) {
             }
         }
 
+        admin_notify_db_change($pdo, 'created', 'Owner account', [
+            'owner_id' => (int)$new_owner_id,
+            'details' => ' (' . $_POST['owner_name'] . ', ' . $no_of_pets . ' pet(s))',
+        ]);
+
         $success_message = 'Owner and pets added successfully.';
     }
 }

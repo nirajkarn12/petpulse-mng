@@ -89,7 +89,31 @@ if(isset($_POST['form1'])) {
         $error_message .= "Invalid longitude value<br>";
     }
 
+    // ----- IMAGE UPLOAD HANDLING -----
+    $final_image = '';
+    if(isset($_FILES['pet_image']) && $_FILES['pet_image']['name'] != '') {
+        $path = $_FILES['pet_image']['name'];
+        $tmp  = $_FILES['pet_image']['tmp_name'];
+        
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $ext = strtolower($ext);
+        
+        if(!in_array($ext, ['jpg','jpeg','png','gif'])) {
+            $valid = 0;
+            $error_message .= "Invalid image format (only JPG, JPEG, PNG, GIF allowed)<br>";
+        } else {
+            // Create directory if not exists
+            if(!is_dir('assets/uploads/pets')) {
+                mkdir('assets/uploads/pets', 0777, true);
+            }
+            // Generate unique name using timestamp
+            $final_image = 'pet-'.time().'-'.rand(1000,9999).'.'.$ext;
+            move_uploaded_file($tmp, 'assets/uploads/pets/'.$final_image);
+        }
+    }
+
     if($valid == 1) {
+        // Insert with pet_image
         $statement = $pdo->prepare("INSERT INTO tbl_pet (
             owner_id,
             pet_name,
@@ -97,8 +121,10 @@ if(isset($_POST['form1'])) {
             pet_breed,
             pet_age,
             pet_latitude,
-            pet_longitude
-        ) VALUES (?,?,?,?,?,?,?)");
+            pet_longitude,
+            pet_image
+        ) VALUES (?,?,?,?,?,?,?,?)");
+        
         $statement->execute([
             $_POST['owner_id'],
             $_POST['pet_name'],
@@ -106,7 +132,8 @@ if(isset($_POST['form1'])) {
             $_POST['pet_breed'],
             !empty($_POST['pet_age']) ? (int)$_POST['pet_age'] : null,
             $pet_latitude,
-            $pet_longitude
+            $pet_longitude,
+            $final_image
         ]);
 
         // Update no_of_pets count in tbl_owner
@@ -114,6 +141,13 @@ if(isset($_POST['form1'])) {
             SELECT COUNT(*) FROM tbl_pet WHERE owner_id = ?
         ) WHERE owner_id = ?");
         $statement->execute([$_POST['owner_id'], $_POST['owner_id']]);
+
+        $new_pet_id = (int)$pdo->lastInsertId();
+        admin_notify_db_change($pdo, 'created', 'Pet', [
+            'pet_id' => $new_pet_id,
+            'owner_id' => (int)$_POST['owner_id'],
+            'details' => ' (' . $_POST['pet_name'] . ')',
+        ]);
 
         $success_message = 'Pet added successfully.';
     }
@@ -141,7 +175,7 @@ if(isset($_POST['form1'])) {
             <div class="callout callout-success"><p><?php echo $success_message; ?></p></div>
             <?php endif; ?>
 
-            <form class="form-horizontal" action="" method="post">
+            <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                 <div class="box box-info">
                     <div class="box-body">
 
@@ -162,6 +196,15 @@ if(isset($_POST['form1'])) {
                                     </option>
                                     <?php } ?>
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Pet Photo -->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Pet Photo</label>
+                            <div class="col-sm-4">
+                                <input type="file" name="pet_image" accept="image/*">
+                                <span class="help-block" style="font-size:11px;">Optional. Allowed: JPG, JPEG, PNG, GIF</span>
                             </div>
                         </div>
 

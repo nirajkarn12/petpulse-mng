@@ -1,6 +1,13 @@
 <?php require_once('header.php'); ?>
 
 <?php
+if (!isset($_SESSION['owner'])) {
+    header('location: login.php');
+    exit;
+}
+
+$owner_id = (int)$_SESSION['owner']['owner_id'];
+
 $error_message = '';
 $success_message = '';
 
@@ -19,16 +26,32 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
+        $pet_id = (int)$_POST['pet_id'];
+        $helper = new NotificationHelper($pdo);
+
+        if (!$helper->ownerOwnsPet($owner_id, $pet_id)) {
+            $valid = 0;
+            $error_message .= "Invalid pet selected<br>";
+        }
+    }
+
+    if($valid == 1) {
 
         $statement = $pdo->prepare("INSERT INTO vaccinations 
             (pet_id, vaccine_name, date_given, due_date)
             VALUES (?,?,?,?)");
 
         $statement->execute([
-            $_POST['pet_id'],
+            $pet_id,
             $_POST['vaccine_name'],
             $_POST['date_given'],
             $_POST['due_date']
+        ]);
+
+        owner_notify_db_change($pdo, 'created', $owner_id, 'Vaccination', [
+            'pet_id' => $pet_id,
+            'details' => ' (' . $_POST['vaccine_name'] . ')',
+            'trigger_alerts' => true,
         ]);
 
         $success_message = "Vaccination added successfully.";
@@ -61,7 +84,9 @@ if(isset($_POST['form1'])) {
 <select name="pet_id" class="form-control">
 <option value="">Select Pet</option>
 <?php
-$pets = $pdo->query("SELECT pet_id, pet_name FROM tbl_pet ORDER BY pet_name ASC")->fetchAll(PDO::FETCH_ASSOC);
+$pets_stmt = $pdo->prepare("SELECT pet_id, pet_name FROM tbl_pet WHERE owner_id = ? ORDER BY pet_name ASC");
+$pets_stmt->execute([$owner_id]);
+$pets = $pets_stmt->fetchAll(PDO::FETCH_ASSOC);
 foreach($pets as $p){
 ?>
 <option value="<?php echo $p['pet_id']; ?>">

@@ -54,25 +54,25 @@
                             <tr>
                                 <td><?php echo $i; ?></td>
 
-                                <td><?php echo htmlspecialchars($row['pet_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['pet_name'] ?? ''); ?></td>
 
-                                <td><?php echo htmlspecialchars($row['recorded_at']); ?></td>
+                                <td><?php echo htmlspecialchars($row['recorded_at'] ?? ''); ?></td>
 
-                                <td><?php echo htmlspecialchars($row['heart_rate_bpm']); ?> bpm</td>
+                                <td><?php echo htmlspecialchars($row['heart_rate_bpm'] ?? ''); ?> bpm</td>
 
-                                <td><?php echo htmlspecialchars($row['body_temp_f']); ?> °F</td>
+                                <td><?php echo htmlspecialchars($row['body_temp_f'] ?? ''); ?> °F</td>
 
-                                <td><?php echo htmlspecialchars($row['activity_score']); ?></td>
+                                <td><?php echo htmlspecialchars($row['activity_score'] ?? ''); ?></td>
 
-                                <td><?php echo htmlspecialchars($row['active_minutes']); ?> min</td>
+                                <td><?php echo htmlspecialchars($row['active_minutes'] ?? ''); ?> min</td>
 
-                                <td><?php echo htmlspecialchars($row['distance_miles']); ?> mi</td>
+                                <td><?php echo htmlspecialchars($row['distance_miles'] ?? ''); ?> mi</td>
 
-                                <td><?php echo htmlspecialchars($row['deep_sleep_minutes']); ?> min</td>
+                                <td><?php echo htmlspecialchars($row['deep_sleep_minutes'] ?? ''); ?> min</td>
 
                                 <td>
                                     <?php
-                                    $emotion = strtolower($row['emotion_state']);
+                                    $emotion = strtolower($row['emotion_state'] ?? '');
 
                                     if ($emotion == 'happy') {
                                         echo '<span class="label label-success">Happy</span>';
@@ -83,7 +83,7 @@
                                     } elseif ($emotion == 'energetic') {
                                         echo '<span class="label label-primary">Energetic</span>';
                                     } else {
-                                        echo '<span class="label label-default">' . htmlspecialchars($row['emotion_state']) . '</span>';
+                                        echo '<span class="label label-default">' . htmlspecialchars($row['emotion_state'] ?? '') . '</span>';
                                     }
                                     ?>
                                 </td>

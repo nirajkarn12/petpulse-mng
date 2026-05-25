@@ -1,18 +1,31 @@
 <?php require_once('header.php'); ?>
 
 <?php
+if (!isset($_SESSION['owner'])) {
+    header('location: login.php');
+    exit;
+}
+
+$owner_id = (int)$_SESSION['owner']['owner_id'];
+
 if(!isset($_REQUEST['id'])) {
     header('location: vaccination.php'); exit;
 }
 
-$statement = $pdo->prepare("SELECT * FROM vaccinations WHERE id=?");
-$statement->execute([$_REQUEST['id']]);
-
-if($statement->rowCount() == 0) {
-    header('location: vaccination.php'); exit;
-}
+$statement = $pdo->prepare("
+    SELECT v.*
+    FROM vaccinations v
+    INNER JOIN tbl_pet p ON v.pet_id = p.pet_id
+    WHERE v.id = ? AND p.owner_id = ?
+");
+$statement->execute([$_REQUEST['id'], $owner_id]);
 
 $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+if (!$row) {
+    header('location: vaccination.php');
+    exit;
+}
 
 $error_message = '';
 $success_message = '';
@@ -32,6 +45,16 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
+        $pet_id = (int)$_POST['pet_id'];
+        $helper = new NotificationHelper($pdo);
+
+        if (!$helper->ownerOwnsPet($owner_id, $pet_id)) {
+            $valid = 0;
+            $error_message .= "Invalid pet selected<br>";
+        }
+    }
+
+    if($valid == 1) {
 
         $statement = $pdo->prepare("UPDATE vaccinations SET
             pet_id=?,
@@ -41,11 +64,17 @@ if(isset($_POST['form1'])) {
             WHERE id=?");
 
         $statement->execute([
-            $_POST['pet_id'],
+            $pet_id,
             $_POST['vaccine_name'],
             $_POST['date_given'],
             $_POST['due_date'],
             $_REQUEST['id']
+        ]);
+
+        owner_notify_db_change($pdo, 'updated', $owner_id, 'Vaccination', [
+            'pet_id' => $pet_id,
+            'details' => ' (' . $_POST['vaccine_name'] . ')',
+            'trigger_alerts' => true,
         ]);
 
         $success_message = "Vaccination updated successfully.";
@@ -77,7 +106,9 @@ if(isset($_POST['form1'])) {
 <div class="col-sm-4">
 <select name="pet_id" class="form-control">
 <?php
-$pets = $pdo->query("SELECT pet_id, pet_name FROM tbl_pet")->fetchAll(PDO::FETCH_ASSOC);
+$pets_stmt = $pdo->prepare("SELECT pet_id, pet_name FROM tbl_pet WHERE owner_id = ? ORDER BY pet_name ASC");
+$pets_stmt->execute([$owner_id]);
+$pets = $pets_stmt->fetchAll(PDO::FETCH_ASSOC);
 foreach($pets as $p){
 ?>
 <option value="<?php echo $p['pet_id']; ?>"

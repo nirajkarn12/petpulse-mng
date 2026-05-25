@@ -153,6 +153,11 @@ if(isset($_POST['form1'])) {
 
         ]);
 
+        admin_notify_db_change($pdo, 'updated', 'Owner account', [
+            'owner_id' => (int)$_REQUEST['id'],
+            'details' => ' (' . $_POST['owner_name'] . ')',
+        ]);
+
         $success_message = "Owner updated successfully!";
     }
 }

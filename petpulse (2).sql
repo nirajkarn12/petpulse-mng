@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 13, 2026 at 10:10 AM
+-- Generation Time: May 18, 2026 at 10:21 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.2.10
 
@@ -20,6 +20,182 @@ SET time_zone = "+00:00";
 --
 -- Database: `petpulse`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+DROP PROCEDURE IF EXISTS `generate_notifications`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generate_notifications` ()   BEGIN
+    -- 1. Low battery (≤15%)
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'battery',
+           'Low Battery Warning',
+           CONCAT(p.pet_name, '\'s collar battery is at ', p.pet_device_battery, '%. Please charge soon.'),
+           'device_status.php', NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_device_battery IS NOT NULL AND p.pet_device_battery <= 15
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id
+            AND n.pet_id = p.pet_id
+            AND n.type = 'battery'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 2. Device offline
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'device',
+           'Device Offline',
+           CONCAT(p.pet_name, '\'s smart collar is offline. Check connection.'),
+           'devices.php', NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_device_online = 0
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'device'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 3. Abnormal heart rate (60-140 BPM)
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'health_alert',
+           'Abnormal Heart Rate',
+           CONCAT('Heart rate: ', p.pet_heartbeat, ' BPM. Normal 60–140.'),
+           CONCAT('pet_health.php?id=', p.pet_id), NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_heartbeat IS NOT NULL AND (p.pet_heartbeat < 60 OR p.pet_heartbeat > 140)
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'health_alert'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 4. Abnormal temperature (37.5–39.2°C)
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'health_alert',
+           'Abnormal Body Temperature',
+           CONCAT('Temperature: ', p.pet_temperature, '°C – possible ',
+                  IF(p.pet_temperature > 39.2, 'fever', 'low temp'), '.'),
+           CONCAT('pet_health.php?id=', p.pet_id), NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_temperature IS NOT NULL AND (p.pet_temperature < 37.5 OR p.pet_temperature > 39.2)
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'health_alert'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 5. Low blood oxygen (<92%)
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'health_alert',
+           'Low Blood Oxygen',
+           CONCAT('SpO2: ', p.pet_spo2, '% – below normal (95-100%).'),
+           CONCAT('pet_health.php?id=', p.pet_id), NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_spo2 IS NOT NULL AND p.pet_spo2 < 92
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'health_alert'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 6. Abnormal respiratory rate (10-30)
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'health_alert',
+           'Abnormal Respiratory Rate',
+           CONCAT('Respiratory rate: ', p.pet_respiratory_rate, ' breaths/min.'),
+           CONCAT('pet_health.php?id=', p.pet_id), NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_respiratory_rate IS NOT NULL AND (p.pet_respiratory_rate < 10 OR p.pet_respiratory_rate > 30)
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'health_alert'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 7. Anxious / agitated emotion
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'behavior',
+           'Behavioral Alert',
+           CONCAT(p.pet_name, ' appears ', p.pet_emotion, '. Extra attention may help.'),
+           CONCAT('pet_behavior.php?id=', p.pet_id), NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_emotion IN ('anxious', 'agitated')
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'behavior'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 8. Health alert status (warning/critical)
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'alert',
+           CONCAT(UPPER(p.pet_alert_status), ' Health Alert'),
+           COALESCE(p.pet_last_alert, 'Your pet requires immediate attention.'),
+           CONCAT('pet_health.php?id=', p.pet_id), NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE p.pet_alert_status IN ('warning', 'critical')
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'alert'
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 9. Vaccinations due within 7 days or overdue
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, v.pet_id,
+           IF(v.due_date < CURDATE(), 'overdue_vaccination', 'vaccination'),
+           IF(v.due_date < CURDATE(), 'Vaccination Overdue', 'Vaccination Due Soon'),
+           CONCAT(v.vaccine_name, ' for ', p.pet_name,
+                  IF(v.due_date < CURDATE(), ' was due on ', ' is due on '), v.due_date,
+                  IF(v.due_date < CURDATE(), '.', '. Please schedule.')),
+           'vaccinations.php', NOW()
+    FROM vaccinations v
+    JOIN tbl_pet p ON v.pet_id = p.pet_id
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    WHERE v.due_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = v.pet_id
+            AND n.type IN ('vaccination', 'overdue_vaccination')
+            AND (n.is_read = 0 OR n.created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR))
+      );
+
+    -- 10. Daily activity goal not met (latest health record today)
+    INSERT INTO notifications (user_id, pet_id, type, title, message, link, created_at)
+    SELECT o.owner_id, p.pet_id, 'activity',
+           'Daily Activity Goal Not Met',
+           CONCAT('Only ', h.active_minutes, ' active minutes today. ', 
+                  (p.daily_goal_minutes - h.active_minutes), ' more minutes to reach goal.'),
+           CONCAT('pet_activity.php?id=', p.pet_id), NOW()
+    FROM tbl_pet p
+    JOIN tbl_owner o ON p.owner_id = o.owner_id
+    JOIN (
+        SELECT pet_id, active_minutes
+        FROM pet_health_records
+        WHERE DATE(recorded_at) = CURDATE()
+        ORDER BY recorded_at DESC
+        LIMIT 1
+    ) h ON p.pet_id = h.pet_id
+    WHERE p.daily_goal_minutes IS NOT NULL
+      AND h.active_minutes < p.daily_goal_minutes
+      AND NOT EXISTS (
+          SELECT 1 FROM notifications n
+          WHERE n.user_id = o.owner_id AND n.pet_id = p.pet_id AND n.type = 'activity'
+            AND DATE(n.created_at) = CURDATE()
+      );
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -72,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `medical_notes` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `pet_id` (`pet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `medical_notes`
@@ -82,7 +258,8 @@ INSERT INTO `medical_notes` (`id`, `pet_id`, `category`, `title`, `description`,
 (1, 45, 'Allergy', 'Chicken', 'Causes skin irritation', '2026-04-27 06:20:40'),
 (2, 33, 'Allergy', 'Dust Mites', 'Seasonal allergies cause sneezing', '2026-04-27 06:20:40'),
 (3, 45, 'Medication', 'Apoquel 16mg', 'For allergy relief, twice daily as needed', '2026-04-27 06:20:40'),
-(5, 32, '', 'dsds', 'sdsdsds', '2026-04-28 10:02:33');
+(5, 32, '', 'dsds', 'sdsdsds', '2026-04-28 10:02:33'),
+(6, 54, 'Medication', 'fg', 'fg', '2026-05-13 16:22:35');
 
 -- --------------------------------------------------------
 
@@ -104,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `pet_id` (`pet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `notifications`
@@ -113,7 +290,9 @@ CREATE TABLE IF NOT EXISTS `notifications` (
 INSERT INTO `notifications` (`id`, `user_id`, `pet_id`, `type`, `title`, `message`, `is_read`, `link`, `created_at`) VALUES
 (2, 3, 31, 'battery', 'Low Battery Warning', 'Smart Collar Pro battery is at 15%. Please charge soon to maintain GPS tracking.', 1, 'device_status.php', '2026-04-27 06:20:40'),
 (3, 3, 31, 'safe_zone', 'Safe Zone Entered', 'Bella has successfully entered the designated “Home” safe zone.', 1, '#', '2026-04-27 06:20:40'),
-(4, 15, 45, 'firmware', 'Firmware Update Complete', 'Collar successfully updated to version 2.4.1.', 1, '#', '2026-04-27 06:20:40');
+(4, 15, 45, 'firmware', 'Firmware Update Complete', 'Collar successfully updated to version 2.4.1.', 1, '#', '2026-04-27 06:20:40'),
+(5, 18, 64, 'device', 'Device Offline', 'bunny\'s smart collar is offline. Check connection.', 0, 'devices.php', '2026-05-18 15:43:51'),
+(6, 15, 67, 'device', 'Device Offline', 'bunny\'s smart collar is offline. Check connection.', 0, 'devices.php', '2026-05-18 15:43:51');
 
 -- --------------------------------------------------------
 
@@ -140,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `payment` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`payment_id`),
   UNIQUE KEY `transaction_uuid` (`transaction_uuid`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `payment`
@@ -151,7 +330,9 @@ INSERT INTO `payment` (`payment_id`, `owner_id`, `transaction_uuid`, `product_co
 (6, 12, 'TXN-1778649297407', 'EPAYTEST', 20.00, 0.00, 0.00, 0.00, 20.00, 'COMPLETED', NULL, 'esewa', NULL, '2026-05-13 05:14:57', '2026-05-13 07:22:24'),
 (7, 12, 'TXN-1778649673289', 'EPAYTEST', 50.00, 0.00, 0.00, 0.00, 50.00, 'COMPLETED', NULL, 'esewa', NULL, '2026-05-13 05:21:13', '2026-05-13 06:08:11'),
 (8, 13, 'TXN-1778653583402', 'EPAYTEST', 400.00, 0.00, 0.00, 0.00, 400.00, 'COMPLETED', NULL, 'esewa', NULL, '2026-05-13 06:26:23', '2026-05-13 06:27:59'),
-(9, 15, 'TXN-1778656836252', 'EPAYTEST', 30.00, 0.00, 0.00, 0.00, 30.00, 'COMPLETED', NULL, 'esewa', NULL, '2026-05-13 07:20:36', '2026-05-13 08:29:07');
+(9, 15, 'TXN-1778656836252', 'EPAYTEST', 30.00, 0.00, 0.00, 0.00, 30.00, 'COMPLETED', NULL, 'esewa', NULL, '2026-05-13 07:20:36', '2026-05-15 11:42:02'),
+(10, 15, 'TXN-1778732609378', 'EPAYTEST', 10.00, 0.00, 0.00, 0.00, 10.00, 'COMPLETED', NULL, 'esewa', NULL, '2026-05-14 04:23:29', '2026-05-15 11:42:00'),
+(11, 3, 'TXN-1778845210974', 'EPAYTEST', 10.00, 0.00, 0.00, 0.00, 10.00, 'COMPLETED', NULL, 'esewa', NULL, '2026-05-15 11:40:10', '2026-05-15 11:41:18');
 
 -- --------------------------------------------------------
 
@@ -179,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `pet_health_records` (
 --
 
 INSERT INTO `pet_health_records` (`id`, `pet_id`, `recorded_at`, `heart_rate_bpm`, `body_temp_f`, `activity_score`, `active_minutes`, `distance_miles`, `deep_sleep_minutes`, `emotion_state`) VALUES
-(1, 45, '2026-04-27 06:59:00', 78, 101.10, 7, 45, 1.20, 30000, 'Happy');
+(1, 58, '2026-04-27 06:59:00', 78, 101.10, 7, 45, 1.20, 30000, 'Happy');
 
 -- --------------------------------------------------------
 
@@ -689,15 +870,17 @@ CREATE TABLE IF NOT EXISTS `tbl_owner` (
   `reset_token` varchar(255) DEFAULT NULL,
   `token_expires` datetime DEFAULT NULL,
   PRIMARY KEY (`owner_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbl_owner`
 --
 
 INSERT INTO `tbl_owner` (`owner_id`, `owner_name`, `owner_phone`, `owner_email`, `password`, `owner_address`, `owner_area`, `owner_location`, `owner_photo`, `no_of_pets`, `is_active`, `created_at`, `reset_token`, `token_expires`) VALUES
-(3, 'raju', '9810110800', 'nirajkarna66@gmail.com', '$2y$10$3M6agfestyh2tvFwTRi6NOqjhImPwIDBIiKyNCeYyBhzSj.W60jne', 'Manamaiju\r\nkathmandu', 'thamel', 'kathmandu', 'owner-3.jpg', 1, 1, '2026-04-21 04:59:46', NULL, NULL),
-(15, 'sajan', '9999999999', 'nirajk_mi@yonefu.info', '$2y$10$8bmZPnquS3fkjqrygK2Yae0dUUrJyneh/j.Fko0RRRop3CoatBVCm', 'Manamaiju\r\nkathmandu', 'thamel', 'kathmandu', 'owner-15.png', 1, 1, '2026-05-12 20:12:57', NULL, NULL);
+(15, 'sajan', '9999999999', 'nirajk_mi@yonefu.info', '$2y$10$o6Ckj9qF358sLl7DZEjcsu6RAUokKT3.1tX2REifvvsAm9Uct4J2O', 'Manamaiju\r\nkathmandu', 'thamel', 'kathmandu', 'owner-15.jpg', 2, 1, '2026-05-12 20:12:57', NULL, NULL),
+(18, 'shyam', '9999999999', '123@admin.com', '$2y$10$MBcDFyRaHiB2Hi8C/w53n.KimAgXusaAEDTrc4QzRFYpbuI8/LI8C', 'Manamaiju\r\nkathmandu', 'fvcvvvc', 'kathmandu', 'owner-18.jpg', 1, 1, '2026-05-14 15:29:24', NULL, NULL),
+(19, 'saopro', '9999999999', '1234@admin.com', '$2y$10$334R/ri9l3Agc85Ii5Z6kef/SVj1W8VtwWFBtla/pLXmYQAPTqKZ2', 'Manamaiju\r\nkathmandu', 'dfdfd', 'kathmandu', 'owner-19.jpg', 0, 1, '2026-05-14 22:46:19', NULL, NULL),
+(21, 'sajan', '9999999999', 'admin@admin.com', '$2y$10$7jdw8fqnmYV5gluDEs1rneeHgJR2XCnzXNAb.jLO9sDUNNoyZqlVi', 'Manamaiju\r\nkathmandu', 'thamel', 'kathmandu', 'owner-21.jpeg', 0, 1, '2026-05-18 04:59:11', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -792,49 +975,21 @@ CREATE TABLE IF NOT EXISTS `tbl_pet` (
   `daily_goal_minutes` int DEFAULT NULL,
   `pet_latitude` decimal(10,7) DEFAULT NULL COMMENT 'GPS Latitude of pet location',
   `pet_longitude` decimal(10,7) DEFAULT NULL COMMENT 'GPS Longitude of pet location',
-  `location_speed_mph` decimal(6,2) DEFAULT NULL,
-  `recorded_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `pet_location_name` varchar(255) DEFAULT NULL COMMENT 'Reverse-geocoded address / area name',
-  `pet_location_at` datetime DEFAULT NULL COMMENT 'Timestamp of last GPS reading',
-  `pet_temperature` decimal(5,2) DEFAULT NULL COMMENT 'Body temperature in °C (normal 37.5–39.2)',
-  `pet_heartbeat` smallint UNSIGNED DEFAULT NULL COMMENT 'Heart rate BPM (normal 60–140)',
-  `pet_spo2` tinyint UNSIGNED DEFAULT NULL COMMENT 'Blood oxygen % (normal 95–100)',
-  `pet_respiratory_rate` tinyint UNSIGNED DEFAULT NULL COMMENT 'Breaths per minute (normal 10–30)',
-  `pet_steps` int UNSIGNED DEFAULT NULL COMMENT 'Step count for the day',
-  `pet_activity_level` enum('resting','low','moderate','high','very_high') DEFAULT NULL COMMENT 'Derived from accelerometer',
-  `pet_calories_burned` decimal(7,2) DEFAULT NULL COMMENT 'Estimated kcal burned today',
-  `pet_emotion` enum('happy','calm','anxious','agitated','sad','excited','unknown') DEFAULT 'unknown' COMMENT 'AI-detected emotional state',
-  `pet_emotion_score` tinyint UNSIGNED DEFAULT NULL COMMENT 'Confidence score 0–100',
-  `pet_bark_count` smallint UNSIGNED DEFAULT NULL COMMENT 'Barks detected in last hour',
-  `pet_ambient_temp` decimal(5,2) DEFAULT NULL COMMENT 'Surrounding air temperature °C',
-  `pet_ambient_humidity` decimal(5,2) DEFAULT NULL COMMENT 'Surrounding humidity %',
-  `pet_device_id` varchar(100) DEFAULT NULL COMMENT 'IoT collar unique identifier',
-  `pet_device_battery` tinyint UNSIGNED DEFAULT NULL COMMENT 'Battery level 0–100%',
-  `pet_device_online` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 = collar online and transmitting',
-  `pet_signal_strength` tinyint DEFAULT NULL COMMENT 'RSSI signal strength dBm',
-  `pet_alert_status` enum('normal','warning','critical') DEFAULT 'normal' COMMENT 'Current health alert level',
-  `pet_last_alert` varchar(255) DEFAULT NULL COMMENT 'Last triggered alert description',
-  `pet_alert_at` datetime DEFAULT NULL COMMENT 'Timestamp of last alert',
-  `pet_last_sync` datetime DEFAULT NULL COMMENT 'Last IoT device sync time',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `pet_image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`pet_id`),
-  KEY `owner_id` (`owner_id`),
-  KEY `idx_device` (`pet_device_id`),
-  KEY `idx_alert` (`pet_alert_status`),
-  KEY `idx_emotion` (`pet_emotion`),
-  KEY `idx_device_online` (`pet_device_online`),
-  KEY `idx_last_sync` (`pet_last_sync`)
-) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `owner_id` (`owner_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbl_pet`
 --
 
-INSERT INTO `tbl_pet` (`pet_id`, `owner_id`, `pet_name`, `pet_type`, `pet_breed`, `pet_age`, `weight_lbs`, `daily_goal_minutes`, `pet_latitude`, `pet_longitude`, `location_speed_mph`, `recorded_at`, `pet_location_name`, `pet_location_at`, `pet_temperature`, `pet_heartbeat`, `pet_spo2`, `pet_respiratory_rate`, `pet_steps`, `pet_activity_level`, `pet_calories_burned`, `pet_emotion`, `pet_emotion_score`, `pet_bark_count`, `pet_ambient_temp`, `pet_ambient_humidity`, `pet_device_id`, `pet_device_battery`, `pet_device_online`, `pet_signal_strength`, `pet_alert_status`, `pet_last_alert`, `pet_alert_at`, `pet_last_sync`, `created_at`, `updated_at`, `pet_image`) VALUES
-(54, 3, 'fg', 'Dog', 'red', 3, NULL, NULL, 27.7172000, 85.3240000, NULL, '2026-05-13 09:20:49', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'unknown', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 'normal', NULL, NULL, NULL, '2026-05-13 15:05:49', '2026-05-13 15:21:27', 'pet-54-1778664987.jpg'),
-(58, 15, 'bunny', 'Dog', 'red', 64, NULL, NULL, 27.7172000, 85.3240000, NULL, '2026-05-13 09:48:41', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'unknown', NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 'normal', NULL, NULL, NULL, '2026-05-13 15:33:41', '2026-05-13 15:34:12', 'pet-58-1778665752.png');
+INSERT INTO `tbl_pet` (`pet_id`, `owner_id`, `pet_name`, `pet_type`, `pet_breed`, `pet_age`, `weight_lbs`, `daily_goal_minutes`, `pet_latitude`, `pet_longitude`, `created_at`, `updated_at`, `pet_image`) VALUES
+(64, 18, 'bunny', 'Dog', 'red', 3, NULL, NULL, 27.8544642, 86.7905233, '2026-05-15 10:04:02', '2026-05-15 10:30:15', 'pet-64-1778820315.jpg'),
+(67, 15, 'bunny', 'Cat', 'red', 3, NULL, NULL, 26.5202107, 87.2797947, '2026-05-18 10:25:53', '2026-05-18 10:26:54', 'pet-67-1779079314.jpg'),
+(68, 15, 'ram', 'Dog', 'red', 7, NULL, 50, 26.5202107, 87.2797947, '2026-05-18 16:04:02', '2026-05-18 16:04:40', 'pet-1779099542-8660.png');
 
 -- --------------------------------------------------------
 
@@ -1146,16 +1301,27 @@ CREATE TABLE IF NOT EXISTS `vaccinations` (
   `due_date` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `pet_id` (`pet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `vaccinations`
 --
 
 INSERT INTO `vaccinations` (`id`, `pet_id`, `vaccine_name`, `date_given`, `due_date`) VALUES
-(3, 33, 'DHPP (1-year)', '2026-04-01', '2026-04-25'),
-(4, 45, 'DHPP (1-year)', '2026-05-13', '2026-05-31'),
-(5, 51, 'DHPP (1-year)', '2026-05-13', '2026-05-31');
+(3, 54, 'DHPP (1-year)', '2026-04-01', '2026-04-25'),
+(4, 54, 'DHPP (1-year)', '2026-05-13', '2026-05-31'),
+(5, 54, 'DHPP (1-year)', '2026-05-13', '2026-05-31'),
+(6, 58, 'DHPP (1-year)', '2026-05-14', '2026-05-29'),
+(7, 58, 'test_niraj', '2026-05-14', '2026-05-15');
+
+DELIMITER $$
+--
+-- Events
+--
+DROP EVENT IF EXISTS `auto_notifications`$$
+CREATE DEFINER=`root`@`localhost` EVENT `auto_notifications` ON SCHEDULE EVERY 1 HOUR STARTS '2026-05-18 15:43:51' ON COMPLETION NOT PRESERVE ENABLE DO CALL generate_notifications()$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

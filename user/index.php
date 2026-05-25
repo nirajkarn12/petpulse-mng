@@ -61,9 +61,16 @@ $medical_stmt = $pdo->prepare("SELECT * FROM medical_notes WHERE pet_id = ? ORDE
 $medical_stmt->execute([$selected_pet_id]);
 $medical_notes = $medical_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Notifications
-$notif_stmt = $pdo->prepare("SELECT * FROM notifications WHERE pet_id = ? ORDER BY created_at DESC LIMIT 5");
-$notif_stmt->execute([$selected_pet_id]);
+// Notifications — logged-in owner only; pet-specific or account-wide (pet_id NULL)
+$notif_stmt = $pdo->prepare("
+    SELECT n.*
+    FROM notifications n
+    WHERE " . notification_filter_for_owner_sql('n') . "
+      AND (n.pet_id IS NULL OR n.pet_id = ?)
+    ORDER BY n.created_at DESC
+    LIMIT 5
+");
+$notif_stmt->execute([$owner_id, $owner_id, $selected_pet_id]);
 $notifications = $notif_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Greeting

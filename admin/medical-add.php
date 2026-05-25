@@ -32,6 +32,11 @@ if(isset($_POST['form1'])) {
             $_POST['description']
         ]);
 
+        admin_notify_db_change($pdo, 'created', 'Medical note', [
+            'pet_id' => (int)$_POST['pet_id'],
+            'details' => ' (' . $_POST['title'] . ')',
+        ]);
+
         $success_message = "Note added successfully";
     }
 }

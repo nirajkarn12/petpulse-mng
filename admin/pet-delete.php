@@ -12,10 +12,16 @@ if(!isset($_REQUEST['id'])) {
 }
 
 // Get owner_id before deleting (needed to update count after)
-$statement = $pdo->prepare("SELECT owner_id FROM tbl_pet WHERE pet_id=?");
+$statement = $pdo->prepare("SELECT owner_id, pet_name FROM tbl_pet WHERE pet_id=?");
 $statement->execute([$_REQUEST['id']]);
 $pet = $statement->fetch(PDO::FETCH_ASSOC);
 $owner_id = $pet['owner_id'];
+
+admin_notify_db_change($pdo, 'deleted', 'Pet', [
+    'pet_id' => (int)$_REQUEST['id'],
+    'owner_id' => (int)$owner_id,
+    'details' => ' (' . $pet['pet_name'] . ')',
+]);
 
 // Delete the pet
 $statement = $pdo->prepare("DELETE FROM tbl_pet WHERE pet_id=?");

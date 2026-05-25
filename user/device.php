@@ -58,13 +58,8 @@ $owner_id = $_SESSION['owner']['owner_id'];
 $i = 0;
 
 /*
-IMPORTANT FIX:
-Your pet name was not visible because
-some device rows may have invalid pet_id
-or NULL pet_id.
-
-Also now filtering ONLY pets
-belonging to logged in owner.
+FETCH ONLY DEVICES
+BELONGING TO LOGGED IN OWNER
 */
 
 $statement = $pdo->prepare("
@@ -93,70 +88,99 @@ $i++;
 
 <tr>
 
+<!-- SERIAL -->
+
 <td>
     <?php echo $i; ?>
 </td>
 
+<!-- PET NAME -->
+
+<td>
+<?php
+echo !empty($row['pet_name'])
+    ? htmlspecialchars($row['pet_name'])
+    : '-';
+?>
+</td>
+
+<!-- DEVICE NAME -->
+
+<td>
+<?php
+echo !empty($row['device_name'])
+    ? htmlspecialchars($row['device_name'])
+    : '-';
+?>
+</td>
+
+<!-- MAC ADDRESS -->
+
+<td>
+<?php
+echo !empty($row['mac_address'])
+    ? htmlspecialchars($row['mac_address'])
+    : '-';
+?>
+</td>
+
+<!-- FIRMWARE -->
+
+<td>
+<?php
+echo !empty($row['firmware_version'])
+    ? htmlspecialchars($row['firmware_version'])
+    : '-';
+?>
+</td>
+
+<!-- STORAGE -->
+
 <td>
 
 <?php
-echo htmlspecialchars($row['pet_name']);
+
+$used_storage = !empty($row['storage_used_mb'])
+    ? $row['storage_used_mb']
+    : 0;
+
+$total_storage = !empty($row['storage_total_mb'])
+    ? $row['storage_total_mb']
+    : 0;
+
+echo $used_storage . ' / ' . $total_storage . ' MB';
+
 ?>
 
 </td>
 
-<td>
-
-<?php
-echo htmlspecialchars($row['device_name']);
-?>
-
-</td>
+<!-- BATTERY -->
 
 <td>
 
 <?php
-echo htmlspecialchars($row['mac_address']);
+$battery = isset($row['battery_percent'])
+    ? (int)$row['battery_percent']
+    : 0;
 ?>
 
-</td>
+<span class="label label-<?php echo ($battery > 30 ? 'success' : 'danger'); ?>">
 
-<td>
-
-<?php
-echo htmlspecialchars($row['firmware_version']);
-?>
-
-</td>
-
-<td>
-
-<?php
-echo $row['storage_used_mb'] .
-' / ' .
-$row['storage_total_mb'] .
-' MB';
-?>
-
-</td>
-
-<td>
-
-<span class="label label-<?php echo ($row['battery_percent'] > 30 ? 'success' : 'danger'); ?>">
-
-<?php echo $row['battery_percent']; ?>%
+<?php echo $battery; ?>%
 
 </span>
 
 </td>
 
+<!-- LAST SYNCED -->
+
 <td>
 
 <?php
 
-echo $row['last_synced']
-? date('Y-m-d H:i', strtotime($row['last_synced']))
-: '-';
+echo !empty($row['last_synced'])
+    ? date('Y-m-d H:i', strtotime($row['last_synced']))
+    : '-';
 
 ?>
 
@@ -166,9 +190,13 @@ echo $row['last_synced']
 
 <td>
 
-<span class="label label-<?php echo ($row['gps_status'] ? 'success' : 'danger'); ?>">
+<?php
+$gps = isset($row['gps_status']) ? $row['gps_status'] : 0;
+?>
 
-<?php echo ($row['gps_status'] ? 'ON' : 'OFF'); ?>
+<span class="label label-<?php echo ($gps ? 'success' : 'danger'); ?>">
+
+<?php echo ($gps ? 'ON' : 'OFF'); ?>
 
 </span>
 
@@ -178,9 +206,13 @@ echo $row['last_synced']
 
 <td>
 
-<span class="label label-<?php echo ($row['heart_rate_status'] ? 'success' : 'danger'); ?>">
+<?php
+$heart = isset($row['heart_rate_status']) ? $row['heart_rate_status'] : 0;
+?>
 
-<?php echo ($row['heart_rate_status'] ? 'ON' : 'OFF'); ?>
+<span class="label label-<?php echo ($heart ? 'success' : 'danger'); ?>">
+
+<?php echo ($heart ? 'ON' : 'OFF'); ?>
 
 </span>
 
@@ -190,9 +222,13 @@ echo $row['last_synced']
 
 <td>
 
-<span class="label label-<?php echo ($row['bluetooth_status'] ? 'success' : 'danger'); ?>">
+<?php
+$bluetooth = isset($row['bluetooth_status']) ? $row['bluetooth_status'] : 0;
+?>
 
-<?php echo ($row['bluetooth_status'] ? 'ON' : 'OFF'); ?>
+<span class="label label-<?php echo ($bluetooth ? 'success' : 'danger'); ?>">
+
+<?php echo ($bluetooth ? 'ON' : 'OFF'); ?>
 
 </span>
 
@@ -202,9 +238,13 @@ echo $row['last_synced']
 
 <td>
 
-<span class="label label-<?php echo ($row['temp_status'] ? 'success' : 'danger'); ?>">
+<?php
+$temp = isset($row['temp_status']) ? $row['temp_status'] : 0;
+?>
 
-<?php echo ($row['temp_status'] ? 'ON' : 'OFF'); ?>
+<span class="label label-<?php echo ($temp ? 'success' : 'danger'); ?>">
+
+<?php echo ($temp ? 'ON' : 'OFF'); ?>
 
 </span>
 

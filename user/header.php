@@ -4,6 +4,7 @@ session_start();
 include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");
+require_once dirname(__DIR__) . '/admin/notificationshelper.php';
 $csrf = new CSRF_Protect();
 $error_message = '';
 $success_message = '';
@@ -16,6 +17,31 @@ if(!isset($_SESSION['owner'])) {
 	header('location: login.php');
 	exit;
 }
+
+$header_owner_id = (int)$_SESSION['owner']['owner_id'];
+$header_unread_count = 0;
+$header_notifications = [];
+
+$unread_stmt = $pdo->prepare("
+	SELECT COUNT(*)
+	FROM notifications n
+	WHERE " . notification_filter_for_owner_sql('n') . "
+	  AND n.is_read = 0
+");
+$unread_stmt->execute([$header_owner_id, $header_owner_id]);
+$header_unread_count = (int)$unread_stmt->fetchColumn();
+
+$list_stmt = $pdo->prepare("
+	SELECT n.id, n.title, n.message, n.is_read, n.created_at, n.link, p.pet_name
+	FROM notifications n
+	LEFT JOIN tbl_pet p ON n.pet_id = p.pet_id
+	WHERE " . notification_filter_for_owner_sql('n') . "
+	ORDER BY n.id DESC
+	LIMIT 8
+");
+$list_stmt->execute([$header_owner_id, $header_owner_id]);
+$header_notifications = $list_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -63,9 +89,52 @@ if(!isset($_SESSION['owner'])) {
     <!-- Top Bar ... User Inforamtion .. Login/Log out Area -->
 				<div class="navbar-custom-menu">
 					<ul class="nav navbar-nav">
+						<li class="dropdown notifications-menu">
+							<a href="#" class="dropdown-toggle header-notif-toggle" data-toggle="dropdown" aria-expanded="false" title="Notifications">
+								<i class="fa fa-bell"></i>
+								<?php if ($header_unread_count > 0): ?>
+								<span class="label label-danger header-notif-badge"><?php echo $header_unread_count > 99 ? '99+' : $header_unread_count; ?></span>
+								<?php endif; ?>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="header">
+									<?php if ($header_unread_count > 0): ?>
+										You have <?php echo $header_unread_count; ?> unread notification<?php echo $header_unread_count > 1 ? 's' : ''; ?>
+									<?php else: ?>
+										Notifications
+									<?php endif; ?>
+								</li>
+								<li>
+									<ul class="menu">
+										<?php if (empty($header_notifications)): ?>
+										<li class="text-center text-muted" style="padding:12px 15px;">No notifications yet</li>
+										<?php else: ?>
+										<?php foreach ($header_notifications as $hn): ?>
+										<li class="<?php echo empty($hn['is_read']) ? 'unread' : ''; ?>">
+											<a href="<?php echo !empty($hn['link']) ? htmlspecialchars($hn['link']) : 'notification.php'; ?>">
+												<span class="notif-item-title"><?php echo htmlspecialchars($hn['title'] ?? ''); ?></span>
+												<span class="notif-item-msg"><?php
+													$hn_msg = $hn['message'] ?? '';
+													echo htmlspecialchars(strlen($hn_msg) > 72 ? substr($hn_msg, 0, 69) . '...' : $hn_msg);
+												?></span>
+												<span class="notif-item-meta">
+													<?php if (!empty($hn['pet_name'])): ?>
+														<?php echo htmlspecialchars($hn['pet_name']); ?> ·
+													<?php endif; ?>
+													<?php echo !empty($hn['created_at']) ? date('M j, g:i A', strtotime($hn['created_at'])) : ''; ?>
+												</span>
+											</a>
+										</li>
+										<?php endforeach; ?>
+										<?php endif; ?>
+									</ul>
+								</li>
+								<li class="footer"><a href="notification.php">View all notifications</a></li>
+							</ul>
+						</li>
 						<li class="dropdown user user-menu">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<img src="../admin/assets/uploads/owners/<?php echo $_SESSION['owner']['owner_photo']; ?>" class="user-image" alt="User Image">
+								<img src="../admin/assets/uploads/owners/<?php echo htmlspecialchars($_SESSION['owner']['owner_photo'] ?? ''); ?>" class="user-image" alt="User Image">
 								<span class="hidden-xs"><?php echo $_SESSION['owner']['owner_name']; ?></span>
 							</a>
 							<ul class="dropdown-menu">

@@ -63,6 +63,11 @@ if(isset($_POST['form1'])) {
 			$_SESSION['owner']['owner_id']
 		));
 
+		owner_notify_db_change($pdo, 'updated', (int)$_SESSION['owner']['owner_id'], 'Profile', [
+			'details' => ' (account details)',
+			'link' => 'profile-edit.php',
+		]);
+
 		$success_message = 'Owner Information is updated successfully.';
 	}
 }
@@ -107,6 +112,10 @@ if(isset($_POST['form2'])) {
 			$_SESSION['owner']['owner_id']
 		));
 
+		owner_notify_db_change($pdo, 'updated', (int)$_SESSION['owner']['owner_id'], 'Profile photo', [
+			'link' => 'profile-edit.php',
+		]);
+
 		$success_message = 'Owner Photo is updated successfully.';
 	}
 }
@@ -139,6 +148,10 @@ if(isset($_POST['form3'])) {
 			md5($_POST['password']),
 			$_SESSION['owner']['owner_id']
 		));
+
+		owner_notify_db_change($pdo, 'updated', (int)$_SESSION['owner']['owner_id'], 'Password', [
+			'link' => 'profile-edit.php',
+		]);
 
 		$success_message = 'Owner Password is updated successfully.';
 	}

@@ -20,6 +20,11 @@ if(isset($_POST['form1'])) {
 		$statement->execute(array($_POST['faq_title'],$_POST['faq_content'],$_REQUEST['id']));
 		   
 
+	    admin_notify_db_change($pdo, 'updated', 'FAQ', [
+			'broadcast' => true,
+			'details' => ' (' . $_POST['faq_title'] . ')',
+		]);
+
 	    $success_message = 'FAQ is updated successfully!';
 	}
 }

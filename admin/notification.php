@@ -65,7 +65,8 @@ $i++;
         $type = strtolower($row['type']);
         $label = 'default';
 
-        if($type == 'alert') $label = 'danger';
+        if(strpos($type, 'admin_') === 0) $label = 'primary';
+        elseif($type == 'alert') $label = 'danger';
         elseif($type == 'warning') $label = 'warning';
         elseif($type == 'info') $label = 'info';
         ?>

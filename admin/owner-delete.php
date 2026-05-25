@@ -21,6 +21,14 @@ foreach($result as $row) {
     }
 }
 
+$owner_row = $result[0] ?? null;
+if ($owner_row) {
+    admin_notify_db_change($pdo, 'deleted', 'Owner account', [
+        'owner_id' => (int)$_REQUEST['id'],
+        'details' => ' (' . $owner_row['owner_name'] . ')',
+    ]);
+}
+
 // Delete all pets belonging to this owner
 $statement = $pdo->prepare("DELETE FROM tbl_pet WHERE owner_id=?");
 $statement->execute([$_REQUEST['id']]);

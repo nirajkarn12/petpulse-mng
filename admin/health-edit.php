@@ -71,6 +71,11 @@ if(isset($_POST['form1'])) {
             $_REQUEST['id']
         ]);
 
+        admin_notify_db_change($pdo, 'updated', 'Health record', [
+            'pet_id' => (int)$_POST['pet_id'],
+            'trigger_alerts' => true,
+        ]);
+
         $success_message = "Health record updated successfully.";
     }
 }

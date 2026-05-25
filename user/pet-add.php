@@ -65,6 +65,12 @@ if(isset($_POST['form1'])) {
         ) WHERE owner_id = ?");
         $update->execute([$owner_id, $owner_id]);
 
+        $new_pet_id = (int)$pdo->lastInsertId();
+        owner_notify_db_change($pdo, 'created', $owner_id, 'Pet', [
+            'pet_id' => $new_pet_id,
+            'details' => ' (' . $_POST['pet_name'] . ')',
+        ]);
+
         $success_message = 'Pet added successfully.';
     }
 }

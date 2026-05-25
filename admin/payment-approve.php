@@ -29,6 +29,11 @@ if(isset($_GET['id'])){
 			WHERE owner_id = ? AND is_active = 0
 		");
 		$statement->execute([$owner_id]);
+
+		admin_notify_db_change($pdo, 'updated', 'Payment', [
+			'owner_id' => (int)$owner_id,
+			'details' => ' (approved and account activated)',
+		]);
 	}
 }
 

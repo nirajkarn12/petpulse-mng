@@ -37,6 +37,11 @@ if(isset($_POST['form1'])) {
 		$statement = $pdo->prepare("INSERT INTO tbl_slider (photo,heading,content,button_text,button_url,position) VALUES (?,?,?,?,?,?)");
 		$statement->execute(array($final_name,$_POST['heading'],$_POST['content'],$_POST['button_text'],$_POST['button_url'],$_POST['position']));
 			
+		admin_notify_db_change($pdo, 'created', 'Slider', [
+			'broadcast' => true,
+			'details' => ' (' . $_POST['heading'] . ')',
+		]);
+
 		$success_message = 'Slider is added successfully!';
 
 		unset($_POST['heading']);

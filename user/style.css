@@ -32,6 +32,86 @@ select.form-control {
   margin-top: -10px;
 }
 
+/* Header notification bell (owner panel) */
+.navbar-custom-menu .notifications-menu > .header-notif-toggle {
+  color: #fff !important;
+  padding: 15px 12px;
+  position: relative;
+}
+.navbar-custom-menu .notifications-menu > .header-notif-toggle:hover,
+.navbar-custom-menu .notifications-menu > .header-notif-toggle:focus {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.12);
+}
+.navbar-custom-menu .notifications-menu > .header-notif-toggle .fa-bell {
+  font-size: 20px;
+  color: #fff;
+}
+.navbar-custom-menu .notifications-menu .header-notif-badge {
+  position: absolute;
+  top: 8px;
+  right: 4px;
+  font-size: 10px;
+  padding: 2px 5px;
+  min-width: 18px;
+}
+.navbar-custom-menu .notifications-menu > .dropdown-menu {
+  width: 320px;
+  max-width: 95vw;
+  padding: 0;
+}
+.navbar-custom-menu .notifications-menu > .dropdown-menu > li.header {
+  background: #3c8dbc;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #367fa9;
+}
+.navbar-custom-menu .notifications-menu .menu {
+  max-height: 280px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navbar-custom-menu .notifications-menu .menu > li > a {
+  display: block;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: normal;
+  color: #333;
+}
+.navbar-custom-menu .notifications-menu .menu > li.unread > a {
+  background: #f4f8fc;
+}
+.navbar-custom-menu .notifications-menu .menu > li > a:hover {
+  background: #e8f4fc;
+}
+.navbar-custom-menu .notifications-menu .notif-item-title {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+.navbar-custom-menu .notifications-menu .notif-item-msg {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.35;
+}
+.navbar-custom-menu .notifications-menu .notif-item-meta {
+  display: block;
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+}
+.navbar-custom-menu .notifications-menu > .dropdown-menu > li.footer > a {
+  text-align: center;
+  padding: 10px;
+  background: #f9f9f9;
+  font-size: 13px;
+}
+
 .login-logo {
   font-size: 20px;
 }

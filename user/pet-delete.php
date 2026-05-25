@@ -1,21 +1,32 @@
 <?php require_once('header.php'); ?>
 
 <?php
-if(!isset($_REQUEST['id'])) {
-    header('location: logout.php'); exit;
-} else {
-    $statement = $pdo->prepare("SELECT * FROM tbl_pet WHERE pet_id=?");
-    $statement->execute([$_REQUEST['id']]);
-    if($statement->rowCount() == 0) {
-        header('location: logout.php'); exit;
-    }
+if (!isset($_SESSION['owner'])) {
+    header('location: login.php');
+    exit;
 }
 
-// Get owner_id before deleting (needed to update count after)
-$statement = $pdo->prepare("SELECT owner_id FROM tbl_pet WHERE pet_id=?");
+$session_owner_id = (int)$_SESSION['owner']['owner_id'];
+
+if(!isset($_REQUEST['id'])) {
+    header('location: logout.php'); exit;
+}
+
+$statement = $pdo->prepare("SELECT owner_id, pet_name FROM tbl_pet WHERE pet_id=?");
 $statement->execute([$_REQUEST['id']]);
 $pet = $statement->fetch(PDO::FETCH_ASSOC);
-$owner_id = $pet['owner_id'];
+
+if (!$pet || (int)$pet['owner_id'] !== $session_owner_id) {
+    header('location: logout.php');
+    exit;
+}
+
+$owner_id = $session_owner_id;
+
+owner_notify_db_change($pdo, 'deleted', $owner_id, 'Pet', [
+    'pet_id' => (int)$_REQUEST['id'],
+    'details' => ' (' . $pet['pet_name'] . ')',
+]);
 
 // Delete the pet
 $statement = $pdo->prepare("DELETE FROM tbl_pet WHERE pet_id=?");

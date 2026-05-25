@@ -51,27 +51,28 @@ $owner_id = $_SESSION['owner']['owner_id'];
 
 $i = 0;
 
-/* FETCH ONLY LOGGED IN OWNER NOTIFICATIONS */
+/* Only this logged-in owner's notifications; pet rows must belong to them */
 $statement = $pdo->prepare("
     SELECT
         n.*,
         p.pet_name,
-        o.owner_name
+        o.owner_name,
+        o.owner_email
 
     FROM notifications n
 
     LEFT JOIN tbl_pet p
     ON n.pet_id = p.pet_id
 
-    LEFT JOIN tbl_owner o
-    ON n.user_id = o.owner_id
+    INNER JOIN tbl_owner o
+    ON n.user_id = o.owner_id AND o.owner_id = ?
 
-    WHERE n.user_id = ?
+    WHERE " . notification_filter_for_owner_sql('n') . "
 
     ORDER BY n.id DESC
 ");
 
-$statement->execute(array($owner_id));
+$statement->execute([$owner_id, $owner_id, $owner_id]);
 
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -116,7 +117,10 @@ $type = strtolower($row['type'] ?? '');
 
 $label = 'default';
 
-if($type == 'alert'){
+if(strpos($type, 'admin_') === 0 || strpos($type, 'owner_') === 0) {
+    $label = 'primary';
+}
+elseif($type == 'alert'){
     $label = 'danger';
 }
 elseif($type == 'warning'){
@@ -229,6 +233,12 @@ Open
 </tr>
 
 <?php } ?>
+
+<?php if ($i === 0): ?>
+<tr>
+    <td colspan="9" class="text-center text-muted">No notifications for your account.</td>
+</tr>
+<?php endif; ?>
 
 </tbody>
 

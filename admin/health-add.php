@@ -49,6 +49,11 @@ if (isset($_POST['form1'])) {
             $_POST['emotion_state']
         ]);
 
+        admin_notify_db_change($pdo, 'created', 'Health record', [
+            'pet_id' => (int)$_POST['pet_id'],
+            'trigger_alerts' => true,
+        ]);
+
         $success_message = "Health record added successfully.";
     }
 }

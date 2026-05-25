@@ -147,6 +147,12 @@ if(isset($_POST['form1'])) {
             $_REQUEST['id']
         ]);
 
+        admin_notify_db_change($pdo, 'updated', 'Pet', [
+            'pet_id' => (int)$_REQUEST['id'],
+            'owner_id' => (int)$_POST['owner_id'],
+            'details' => ' (' . $_POST['pet_name'] . ')',
+        ]);
+
         $success_message = "Pet updated successfully";
     }
 }

@@ -31,6 +31,13 @@ if(!isset($_REQUEST['id'])) {
 		unlink('assets/uploads/'.$photo);	
 	}
 
+	if (!empty($row['heading'])) {
+		admin_notify_db_change($pdo, 'deleted', 'Slider', [
+			'broadcast' => true,
+			'details' => ' (' . $row['heading'] . ')',
+		]);
+	}
+
 	// Delete from tbl_slider
 	$statement = $pdo->prepare("DELETE FROM tbl_slider WHERE id=?");
 	$statement->execute(array($_REQUEST['id']));

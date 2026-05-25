@@ -17,6 +17,17 @@ if(!isset($_REQUEST['id'])) {
 ?>
 
 <?php
+	$statement = $pdo->prepare("SELECT faq_title FROM tbl_faq WHERE faq_id=?");
+	$statement->execute(array($_REQUEST['id']));
+	$faq = $statement->fetch(PDO::FETCH_ASSOC);
+
+	if ($faq) {
+		admin_notify_db_change($pdo, 'deleted', 'FAQ', [
+			'broadcast' => true,
+			'details' => ' (' . $faq['faq_title'] . ')',
+		]);
+	}
+
 	// Delete from tbl_faq
 	$statement = $pdo->prepare("DELETE FROM tbl_faq WHERE faq_id=?");
 	$statement->execute(array($_REQUEST['id']));

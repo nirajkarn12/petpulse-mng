@@ -19,6 +19,11 @@ if(isset($_POST['form1'])) {
 		$statement = $pdo->prepare("INSERT INTO tbl_faq (faq_title,faq_content) VALUES (?,?)");
 		$statement->execute(array($_POST['faq_title'],$_POST['faq_content']));
 			
+		admin_notify_db_change($pdo, 'created', 'FAQ', [
+			'broadcast' => true,
+			'details' => ' (' . $_POST['faq_title'] . ')',
+		]);
+
 		$success_message = 'FAQ is added successfully!';
 
 		unset($_POST['faq_title']);

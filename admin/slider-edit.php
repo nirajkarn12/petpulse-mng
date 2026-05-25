@@ -33,6 +33,11 @@ if(isset($_POST['form1'])) {
     		$statement->execute(array($final_name,$_POST['heading'],$_POST['content'],$_POST['button_text'],$_POST['button_url'],$_POST['position'],$_REQUEST['id']));
 		}	   
 
+	    admin_notify_db_change($pdo, 'updated', 'Slider', [
+			'broadcast' => true,
+			'details' => ' (' . $_POST['heading'] . ')',
+		]);
+
 	    $success_message = 'Slider is updated successfully!';
 	}
 }

@@ -31,6 +31,12 @@ if(isset($_POST['form1'])) {
             $_POST['due_date']
         ]);
 
+        admin_notify_db_change($pdo, 'created', 'Vaccination', [
+            'pet_id' => (int)$_POST['pet_id'],
+            'details' => ' (' . $_POST['vaccine_name'] . ')',
+            'trigger_alerts' => true,
+        ]);
+
         $success_message = "Vaccination added successfully.";
     }
 }

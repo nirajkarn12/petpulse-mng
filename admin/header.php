@@ -4,6 +4,7 @@ session_start();
 include("inc/config.php");
 include("inc/functions.php");
 include("inc/CSRF_Protect.php");
+require_once __DIR__ . '/notificationshelper.php';
 $csrf = new CSRF_Protect();
 $error_message = '';
 $success_message = '';
@@ -150,6 +151,12 @@ if(!isset($_SESSION['user'])) {
                      <li class="treeview <?php if( ($cur_page == 'slider.php') ) {echo 'active';} ?>">
 			          <a href="slider.php">
 			            <i class="fa fa-picture-o"></i> <span>Manage Sliders</span>
+			          </a>
+			        </li>
+
+					   <li class="treeview <?php if( ($cur_page == 'blog.php') ) {echo 'active';} ?>">
+			          <a href="blog.php">
+			            <i class="fa fa-picture-o"></i> <span>Blog</span>
 			          </a>
 			        </li>
 

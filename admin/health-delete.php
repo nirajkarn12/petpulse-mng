@@ -15,9 +15,12 @@ if($statement->rowCount() == 0) {
     exit;
 }
 
-// Optional: fetch pet_id (if you later want analytics updates)
 $row = $statement->fetch(PDO::FETCH_ASSOC);
 $pet_id = $row['pet_id'];
+
+admin_notify_db_change($pdo, 'deleted', 'Health record', [
+    'pet_id' => (int)$pet_id,
+]);
 
 // DELETE health record
 $statement = $pdo->prepare("DELETE FROM pet_health_records WHERE id=?");

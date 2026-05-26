@@ -6,7 +6,7 @@
 
 <style>
 /* ═══════════════════════════════════════════════
-   PETPULSE — LARGE UI · Maximum Readability
+   PETPULSE — Dashboard (compact, readable)
    ═══════════════════════════════════════════════ */
 :root {
   --bg:         #06080f;
@@ -44,14 +44,14 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 18px; } /* ← BASE SIZE — everything scales from here */
+html { font-size: 15px; }
 
 body {
   background: var(--bg) !important;
   font-family: var(--font-body) !important;
-  font-size: 1rem !important;
+  font-size: 0.93rem !important;
   color: var(--text) !important;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 .content-wrapper { background: var(--bg) !important; }
 .content-header  { display: none !important; }
@@ -64,35 +64,35 @@ body::before {
 }
 
 /* ── WRAPPER ── */
-.dash { padding: 36px 32px; max-width: 1600px; }
+.dash { padding: 22px 20px; max-width: 1600px; }
 
 /* ══════════════ TOPBAR ══════════════ */
 .topbar {
   display: flex; align-items: flex-start; justify-content: space-between;
-  margin-bottom: 40px;
-  padding-bottom: 28px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
   border-bottom: 1px solid var(--border2);
-  gap: 24px; flex-wrap: wrap;
+  gap: 16px; flex-wrap: wrap;
 }
 .topbar-logo {
-  display: flex; align-items: center; gap: 18px;
+  display: flex; align-items: center; gap: 12px;
 }
 .topbar-icon {
-  width: 66px; height: 66px; border-radius: 18px;
-  background: linear-gradient(135deg, rgba(99,202,183,.2), rgba(116,179,254,.15));
+  width: 48px; height: 48px; border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(116,179,254,.15));
   border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  font-size: 2.2rem;
+  font-size: 1.5rem;
 }
 .topbar-title {
   font-family: var(--font-head);
-  font-size: 2.4rem;
+  font-size: 1.55rem;
   font-weight: 800;
-  letter-spacing: -0.8px;
-  line-height: 1.15;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 .topbar-title span { color: var(--teal); }
-.topbar-sub { color: var(--text2); font-size: 1rem; margin-top: 5px; font-weight: 400; }
+.topbar-sub { color: var(--text2); font-size: 0.85rem; margin-top: 3px; font-weight: 400; }
 
 .topbar-right {
   display: flex; align-items: center; gap: 12px;
@@ -101,9 +101,9 @@ body::before {
 
 /* ── CHIPS ── */
 .chip {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 20px; border-radius: 40px;
-  font-size: 0.9rem; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 40px;
+  font-size: 0.8rem; font-weight: 600;
   border: 1px solid; backdrop-filter: blur(8px);
   letter-spacing: 0.2px;
 }
@@ -117,14 +117,14 @@ body::before {
 
 /* ══════════════ ALERT STRIP ══════════════ */
 .alert-strip {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 10px;
   background: linear-gradient(90deg, rgba(255,107,107,.08) 0%, transparent 100%);
   border: 1px solid rgba(255,107,107,.22);
   border-left: 4px solid var(--red);
   border-radius: var(--r-lg);
-  padding: 18px 24px;
-  margin-bottom: 32px;
-  font-size: 0.95rem;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
   flex-wrap: wrap;
 }
 .alert-strip .badge {
@@ -147,7 +147,7 @@ body::before {
 
 .kpi {
   background: var(--surface); border: 1px solid var(--border2);
-  border-radius: var(--r-lg); padding: 28px 22px;
+  border-radius: var(--r-lg); padding: 16px 14px;
   position: relative; overflow: hidden;
   transition: transform .18s, box-shadow .18s, border-color .2s;
   cursor: default;
@@ -161,70 +161,70 @@ body::before {
   position: absolute; top: 0; left: 0; right: 0;
   height: 3px; border-radius: var(--r-lg) var(--r-lg) 0 0;
 }
-.kpi-icon  { font-size: 1.9rem; margin-bottom: 14px; }
-.kpi-val   { font-family: var(--font-head); font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -2px; }
-.kpi-lbl   { font-size: 0.82rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1.1px; margin-top: 10px; font-weight: 700; }
-.kpi-foot  { font-size: 0.88rem; margin-top: 12px; display: flex; align-items: center; gap: 6px; color: var(--text3); }
+.kpi-icon  { font-size: 1.35rem; margin-bottom: 8px; }
+.kpi-val   { font-family: var(--font-head); font-size: 1.45rem; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+.kpi-lbl   { font-size: 0.72rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 6px; font-weight: 700; }
+.kpi-foot  { font-size: 0.78rem; margin-top: 8px; display: flex; align-items: center; gap: 5px; color: var(--text3); }
 
 /* ══════════════ LAYOUT GRIDS ══════════════ */
-.main-grid   { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
-.main-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-.main-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.main-grid   { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 14px; }
+.main-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.main-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
 @media(max-width:1100px){ .main-grid,.main-grid-3,.main-grid-2{ grid-template-columns:1fr; } }
 
 /* ══════════════ CARD ══════════════ */
 .card {
   background: var(--surface); border: 1px solid var(--border2);
-  border-radius: var(--r-xl); padding: 30px;
+  border-radius: var(--r-lg); padding: 18px;
   transition: border-color .2s;
 }
 .card:hover { border-color: rgba(99,202,183,.14); }
 
 .card-head {
   display: flex; align-items: flex-start;
-  justify-content: space-between; margin-bottom: 24px; gap: 12px;
+  justify-content: space-between; margin-bottom: 14px; gap: 10px;
 }
 .card-title {
   font-family: var(--font-head);
-  font-size: 1.25rem; font-weight: 700;
-  display: flex; align-items: center; gap: 10px;
+  font-size: 1.05rem; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
 }
-.card-sub { font-size: 0.92rem; color: var(--text2); margin-top: 5px; }
+.card-sub { font-size: 0.8rem; color: var(--text2); margin-top: 3px; }
 .card-tag {
   background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 24px; padding: 6px 16px;
-  font-size: 0.88rem; color: var(--text2); white-space: nowrap;
+  border-radius: 24px; padding: 4px 12px;
+  font-size: 0.78rem; color: var(--text2); white-space: nowrap;
   font-weight: 600;
 }
 
 /* ══════════════ VITALS TABLE ══════════════ */
-.vtable { width: 100%; border-collapse: collapse; font-size: 0.97rem; }
+.vtable { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 .vtable th {
-  padding: 13px 16px; text-align: left;
-  font-size: 0.78rem; text-transform: uppercase;
-  letter-spacing: 1px; color: var(--text3);
+  padding: 8px 10px; text-align: left;
+  font-size: 0.68rem; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--text3);
   border-bottom: 1px solid var(--border2);
   font-weight: 700;
 }
-.vtable td { padding: 15px 16px; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: middle; }
+.vtable td { padding: 10px 10px; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: middle; }
 .vtable tr:last-child td { border-bottom: none; }
 .vtable tr:hover td { background: var(--surface2); }
 
-.pet-cell { display: flex; align-items: center; gap: 13px; }
+.pet-cell { display: flex; align-items: center; gap: 10px; }
 .pet-avatar {
-  width: 44px; height: 44px; border-radius: 50%;
+  width: 34px; height: 34px; border-radius: 50%;
   background: var(--surface2); display: flex; align-items: center;
-  justify-content: center; font-size: 1.4rem;
+  justify-content: center; font-size: 1.1rem;
   border: 2px solid var(--border2); flex-shrink: 0;
 }
-.pet-nm  { font-weight: 700; font-size: 1rem; }
-.pet-br  { font-size: 0.82rem; color: var(--text2); margin-top: 2px; }
+.pet-nm  { font-weight: 700; font-size: 0.88rem; }
+.pet-br  { font-size: 0.72rem; color: var(--text2); margin-top: 1px; }
 
 /* ══════════════ PILLS ══════════════ */
 .pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 14px; border-radius: 24px;
-  font-size: 0.88rem; font-weight: 700; border: 1px solid;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 24px;
+  font-size: 0.72rem; font-weight: 700; border: 1px solid;
 }
 .pill-ok     { background: var(--green-dim);  color: var(--green);  border-color: rgba(91,224,154,.25); }
 .pill-warn   { background: var(--amber-dim);  color: var(--amber);  border-color: rgba(245,197,66,.25); }
@@ -242,23 +242,23 @@ body::before {
 .bpm-bar  { display: inline-block; width: 72px; height: 7px; background: var(--surface3); border-radius: 4px; overflow: hidden; vertical-align: middle; margin-left: 8px; }
 .bpm-fill { height: 100%; border-radius: 4px; }
 
-.mono { font-family: var(--font-mono); font-size: 0.92rem; }
+.mono { font-family: var(--font-mono); font-size: 0.78rem; }
 
 /* ══════════════ DEVICE CARDS ══════════════ */
 .device-list { display: flex; flex-direction: column; gap: 14px; }
 .device-row {
   background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--r); padding: 18px 20px;
-  display: flex; align-items: center; gap: 16px;
+  border-radius: var(--r); padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
   transition: border-color .18s;
 }
 .device-row:hover { border-color: var(--teal); }
-.device-icon { font-size: 2rem; flex-shrink: 0; }
+.device-icon { font-size: 1.4rem; flex-shrink: 0; }
 .device-info { flex: 1; min-width: 0; }
-.device-name { font-weight: 700; font-size: 1.05rem; font-family: var(--font-head); }
-.device-id   { font-size: 0.82rem; color: var(--text2); font-family: var(--font-mono); margin-top: 3px; }
-.device-meta { display: flex; gap: 9px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
-.device-stat { display: inline-flex; align-items: center; gap: 6px; font-size: 0.86rem; color: var(--text2); }
+.device-name { font-weight: 700; font-size: 0.9rem; font-family: var(--font-head); }
+.device-id   { font-size: 0.72rem; color: var(--text2); font-family: var(--font-mono); margin-top: 2px; }
+.device-meta { display: flex; gap: 7px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
+.device-stat { display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--text2); }
 
 .battery-bar  { width: 44px; height: 13px; border: 1.5px solid var(--text3); border-radius: 3px; position: relative; padding: 2px; }
 .battery-bar::after { content: ''; position: absolute; right: -5px; top: 50%; transform: translateY(-50%); width: 3px; height: 7px; background: var(--text3); border-radius: 0 2px 2px 0; }
@@ -270,18 +270,18 @@ body::before {
 /* ══════════════ NOTIFICATIONS ══════════════ */
 .notif-list { display: flex; flex-direction: column; gap: 12px; }
 .notif-row {
-  display: flex; align-items: flex-start; gap: 16px;
-  padding: 18px 18px; border-radius: var(--r);
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 12px; border-radius: var(--r);
   border: 1px solid var(--border2); background: var(--surface2);
   transition: border-color .18s;
 }
 .notif-row.unread { border-left: 3px solid var(--teal); }
 .notif-row:hover  { border-color: var(--border); }
-.notif-icon  { font-size: 1.6rem; flex-shrink: 0; margin-top: 1px; }
+.notif-icon  { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
 .notif-body  { flex: 1; min-width: 0; }
-.notif-title { font-weight: 700; font-size: 1rem; font-family: var(--font-head); }
-.notif-msg   { font-size: 0.92rem; color: var(--text2); margin-top: 5px; line-height: 1.5; }
-.notif-time  { font-size: 0.82rem; color: var(--text3); margin-top: 7px; }
+.notif-title { font-weight: 700; font-size: 0.88rem; font-family: var(--font-head); }
+.notif-msg   { font-size: 0.8rem; color: var(--text2); margin-top: 3px; line-height: 1.45; }
+.notif-time  { font-size: 0.72rem; color: var(--text3); margin-top: 4px; }
 .notif-unread-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--teal); flex-shrink: 0; margin-top: 6px; }
 
 /* ══════════════ MEDICAL ══════════════ */
@@ -292,8 +292,8 @@ body::before {
   background: var(--surface2); border: 1px solid var(--border2);
 }
 .med-icon  { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
-.med-title { font-weight: 700; font-size: 1rem; }
-.med-desc  { font-size: 0.92rem; color: var(--text2); margin-top: 4px; }
+.med-title { font-weight: 700; font-size: 0.88rem; }
+.med-desc  { font-size: 0.8rem; color: var(--text2); margin-top: 3px; }
 
 /* ══════════════ VACCINATIONS ══════════════ */
 .vacc-list { display: flex; flex-direction: column; gap: 12px; }
@@ -303,9 +303,9 @@ body::before {
   background: var(--surface2); border: 1px solid var(--border2);
 }
 .vacc-info { flex: 1; }
-.vacc-name  { font-weight: 700; font-size: 1rem; }
-.vacc-pet   { font-size: 0.88rem; color: var(--text2); margin-top: 3px; }
-.vacc-dates { font-size: 0.86rem; color: var(--text2); margin-top: 5px; }
+.vacc-name  { font-weight: 700; font-size: 0.88rem; }
+.vacc-pet   { font-size: 0.78rem; color: var(--text2); margin-top: 2px; }
+.vacc-dates { font-size: 0.75rem; color: var(--text2); margin-top: 4px; }
 
 /* ══════════════ OWNERS ══════════════ */
 .owner-list { display: flex; flex-direction: column; gap: 12px; }
@@ -317,29 +317,29 @@ body::before {
 }
 .owner-row:hover { border-color: var(--blue); }
 .owner-av {
-  width: 46px; height: 46px; border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   background: linear-gradient(135deg, var(--blue-dim), var(--purple-dim));
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem; border: 2px solid rgba(116,179,254,.2); flex-shrink: 0;
+  font-size: 1.1rem; border: 2px solid rgba(116,179,254,.2); flex-shrink: 0;
 }
-.owner-name { font-weight: 700; font-size: 1rem; font-family: var(--font-head); }
-.owner-meta { font-size: 0.88rem; color: var(--text2); margin-top: 3px; }
+.owner-name { font-weight: 700; font-size: 0.88rem; font-family: var(--font-head); }
+.owner-meta { font-size: 0.78rem; color: var(--text2); margin-top: 2px; }
 .owner-badge {
   background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 24px; padding: 5px 14px;
-  font-size: 0.9rem; color: var(--teal); font-weight: 700; white-space: nowrap;
+  border-radius: 24px; padding: 4px 10px;
+  font-size: 0.78rem; color: var(--teal); font-weight: 700; white-space: nowrap;
 }
 
 /* ══════════════ GPS MAP ══════════════ */
 .pet-map-wrap {
-  position: relative; width: 100%; height: 260px;
+  position: relative; width: 100%; height: 200px;
   background: var(--surface2); border-radius: var(--r);
   overflow: hidden; border: 1px solid var(--border2); margin-top: 6px;
 }
 .pet-map-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .map-pin {
   position: absolute; transform: translate(-50%,-100%);
-  font-size: 1.8rem; cursor: pointer;
+  font-size: 1.35rem; cursor: pointer;
   filter: drop-shadow(0 2px 10px rgba(0,0,0,.8));
   transition: transform .2s;
 }
@@ -355,15 +355,15 @@ body::before {
 /* ══════════════ HEALTH GRID ══════════════ */
 .health-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-top: 14px; }
 .health-stat { background: var(--surface3); border-radius: 12px; padding: 16px 18px; }
-.health-val  { font-family: var(--font-head); font-size: 1.7rem; font-weight: 800; }
-.health-lbl  { font-size: 0.78rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 4px; font-weight: 700; }
+.health-val  { font-family: var(--font-head); font-size: 1.25rem; font-weight: 800; }
+.health-lbl  { font-size: 0.68rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 3px; font-weight: 700; }
 
 /* ══════════════ STORAGE BAR ══════════════ */
 .storage-bar-wrap { width: 100%; height: 6px; background: var(--surface3); border-radius: 4px; overflow: hidden; margin-top: 5px; }
 .storage-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--teal), var(--blue)); }
 
 /* ══════════════ CHARTS ══════════════ */
-canvas { max-height: 220px !important; }
+canvas { max-height: 180px !important; }
 
 /* ══════════════ SECTION DIVIDER ══════════════ */
 .section-head {
@@ -375,7 +375,7 @@ canvas { max-height: 220px !important; }
 .section-head::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
 
 /* Empty states */
-.empty-state { color: var(--text2); font-size: 1rem; text-align: center; padding: 32px; }
+.empty-state { color: var(--text2); font-size: 0.85rem; text-align: center; padding: 20px; }
 </style>
 
 <section class="content">
@@ -410,9 +410,29 @@ $health_records = $pdo->query("
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 $all_pets = $pdo->query("
-  SELECT p.*, o.owner_name FROM tbl_pet p
+  SELECT
+    p.*,
+    o.owner_name,
+    d.battery_percent AS pet_device_battery,
+    CASE
+      WHEN d.id IS NULL THEN 0
+      WHEN d.bluetooth_status = 'Connected' OR d.gps_status = 'Active' THEN 1
+      ELSE 0
+    END AS pet_device_online,
+    CASE
+      WHEN d.temp_status = 'Alert' THEN 'warning'
+      ELSE 'normal'
+    END AS pet_alert_status
+  FROM tbl_pet p
   LEFT JOIN tbl_owner o ON p.owner_id = o.owner_id
-  ORDER BY p.pet_id DESC LIMIT 10
+  LEFT JOIN devices d ON d.id = (
+    SELECT d2.id FROM devices d2
+    WHERE d2.pet_id = p.pet_id
+    ORDER BY d2.id DESC
+    LIMIT 1
+  )
+  ORDER BY p.pet_id DESC
+  LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 $med_notes = $pdo->query("
@@ -644,18 +664,18 @@ $med_cat_cnt = json_encode(array_column($med_cats, 'cnt'));
               <div class="battery-bar"><div class="battery-fill <?php echo $bat_cls; ?>" style="width:<?php echo $bat; ?>%;"></div></div>
               <span style="<?php echo $bat<=15?'color:var(--red)':''; ?>"><?php echo $bat; ?>%</span>
             </span>
-            <span class="pill <?php echo $d['gps_status']==='Active'?'pill-ok':'pill-muted'; ?>" style="padding:4px 11px;font-size:.86rem;">📍 GPS</span>
-            <span class="pill <?php echo $d['bluetooth_status']==='Connected'?'pill-info':'pill-muted'; ?>" style="padding:4px 11px;font-size:.86rem;">🔵 BT</span>
-            <span class="pill <?php echo $d['heart_rate_status']==='Logging'?'pill-ok':'pill-muted'; ?>" style="padding:4px 11px;font-size:.86rem;">❤️ HR</span>
+            <span class="pill <?php echo $d['gps_status']==='Active'?'pill-ok':'pill-muted'; ?>" style="padding:3px 9px;font-size:.72rem;">📍 GPS</span>
+            <span class="pill <?php echo $d['bluetooth_status']==='Connected'?'pill-info':'pill-muted'; ?>" style="padding:3px 9px;font-size:.72rem;">🔵 BT</span>
+            <span class="pill <?php echo $d['heart_rate_status']==='Logging'?'pill-ok':'pill-muted'; ?>" style="padding:3px 9px;font-size:.72rem;">❤️ HR</span>
           </div>
           <div style="margin-top:10px;">
-            <div style="display:flex;justify-content:space-between;font-size:.88rem;color:var(--text2);margin-bottom:5px;">
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text2);margin-bottom:5px;">
               <span>Storage</span>
               <span><?php echo $d['storage_used_mb']; ?>/<?php echo $d['storage_total_mb']; ?> MB</span>
             </div>
             <div class="storage-bar-wrap"><div class="storage-fill" style="width:<?php echo $stor_pct; ?>%;"></div></div>
           </div>
-          <div style="margin-top:8px;font-size:.88rem;color:var(--text3);">
+          <div style="margin-top:8px;font-size:.78rem;color:var(--text3);">
             <?php echo $pet_icon; ?> <?php echo htmlspecialchars($d['pet_name']??'—'); ?> &nbsp;·&nbsp;
             FW <?php echo htmlspecialchars($d['firmware_version']); ?> &nbsp;·&nbsp;
             Synced <?php echo $d['last_synced']?date('d M H:i',strtotime($d['last_synced'])):'—'; ?>
@@ -685,7 +705,7 @@ $med_cat_cnt = json_encode(array_column($med_cats, 'cnt'));
         $icons=['Dog'=>'🐕','Cat'=>'🐈','Bird'=>'🦜','Fish'=>'🐠','Rabbit'=>'🐇'];
         $icon=$icons[$t['pet_type']]??'🐾';
       ?>
-      <div style="display:flex;align-items:center;gap:7px;font-size:0.97rem;color:var(--text2);">
+      <div style="display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--text2);">
         <?php echo $icon; ?> <?php echo htmlspecialchars($t['pet_type']); ?> <strong style="color:var(--text)">(<?php echo $t['cnt']; ?>)</strong>
       </div>
       <?php endforeach; ?>
@@ -757,9 +777,10 @@ $med_cat_cnt = json_encode(array_column($med_cats, 'cnt'));
         </thead>
         <tbody>
           <?php foreach($all_pets as $p):
-            $alert_cls=['normal'=>'pill-ok','warning'=>'pill-warn','critical'=>'pill-alert'][$p['pet_alert_status']]??'pill-muted';
-            $online_dot=$p['pet_device_online']?'dot-green':'dot-gray';
-            $pet_icon=strtolower($p['pet_type']??'')==='cat'?'🐈':'🐕';
+            $alert_status = strtolower((string)($p['pet_alert_status'] ?? 'normal'));
+            $alert_cls = ['normal'=>'pill-ok','warning'=>'pill-warn','critical'=>'pill-alert'][$alert_status] ?? 'pill-muted';
+            $online_dot = !empty($p['pet_device_online']) ? 'dot-green' : 'dot-gray';
+            $pet_icon = strtolower($p['pet_type'] ?? '') === 'cat' ? '🐈' : '🐕';
           ?>
           <tr>
             <td>
@@ -774,7 +795,7 @@ $med_cat_cnt = json_encode(array_column($med_cats, 'cnt'));
             <td style="color:var(--text2);"><?php echo htmlspecialchars($p['owner_name']??'—'); ?></td>
             <td>
               <span><?php echo htmlspecialchars($p['pet_type']??'—'); ?></span>
-              <?php if($p['pet_breed']): ?><br><span style="font-size:.88rem;color:var(--text2)"><?php echo htmlspecialchars($p['pet_breed']); ?></span><?php endif; ?>
+              <?php if($p['pet_breed']): ?><br><span style="font-size:.78rem;color:var(--text2)"><?php echo htmlspecialchars($p['pet_breed']); ?></span><?php endif; ?>
             </td>
             <td class="mono"><?php echo $p['pet_age']?$p['pet_age'].'y':'—'; ?></td>
             <td class="mono"><?php echo $p['weight_lbs']?$p['weight_lbs'].' lbs':'—'; ?></td>
@@ -783,10 +804,12 @@ $med_cat_cnt = json_encode(array_column($med_cats, 'cnt'));
               <span class="mono" style="color:var(--teal);"><?php echo number_format($p['pet_latitude'],4); ?>, <?php echo number_format($p['pet_longitude'],4); ?></span>
               <?php else: ?><span style="color:var(--text3)">—</span><?php endif; ?>
             </td>
-            <td><span class="pill <?php echo $alert_cls; ?>"><?php echo ucfirst($p['pet_alert_status']??'normal'); ?></span></td>
+            <td><span class="pill <?php echo $alert_cls; ?>"><?php echo ucfirst($alert_status); ?></span></td>
             <td>
               <span class="dot <?php echo $online_dot; ?>"></span>
-              <?php if($p['pet_device_battery']): ?> <span class="mono"><?php echo $p['pet_device_battery']; ?>%</span><?php endif; ?>
+              <?php if (isset($p['pet_device_battery']) && $p['pet_device_battery'] !== '' && $p['pet_device_battery'] !== null): ?>
+              <span class="mono"><?php echo (int)$p['pet_device_battery']; ?>%</span>
+              <?php endif; ?>
             </td>
           </tr>
           <?php endforeach; ?>
@@ -847,10 +870,10 @@ $med_cat_cnt = json_encode(array_column($med_cats, 'cnt'));
         <div style="flex:1;min-width:0;">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span class="med-title"><?php echo htmlspecialchars($m['title']); ?></span>
-            <span class="pill <?php echo $cp; ?>" style="padding:3px 11px;font-size:.88rem;"><?php echo htmlspecialchars($m['category']?:'Other'); ?></span>
+            <span class="pill <?php echo $cp; ?>" style="padding:3px 11px;font-size:.78rem;"><?php echo htmlspecialchars($m['category']?:'Other'); ?></span>
           </div>
           <div class="med-desc"><?php echo htmlspecialchars($m['description']); ?></div>
-          <div style="font-size:.88rem;color:var(--text3);margin-top:6px;">
+          <div style="font-size:.78rem;color:var(--text3);margin-top:6px;">
             🐾 <?php echo htmlspecialchars($m['pet_name']??'—'); ?> · <?php echo date('d M Y',strtotime($m['created_at'])); ?>
           </div>
         </div>
@@ -875,7 +898,7 @@ $med_cat_cnt = json_encode(array_column($med_cats, 'cnt'));
         $vs=$is_overdue?'OVERDUE':($due_soon?'Due Soon':'OK');
       ?>
       <div class="vacc-row">
-        <div style="font-size:1.2rem;">💉</div>
+        <div style="font-size:1rem;">💉</div>
         <div class="vacc-info">
           <div class="vacc-name"><?php echo htmlspecialchars($v['vaccine_name']); ?></div>
           <div class="vacc-pet">🐾 <?php echo htmlspecialchars($v['pet_name']??'—'); ?> · <?php echo htmlspecialchars($v['pet_type']??''); ?></div>

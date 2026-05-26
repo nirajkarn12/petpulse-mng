@@ -108,7 +108,7 @@ body{
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:32px;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  box-shadow:0 20px 60px rgba(255, 255, 255, 0.5);
   z-index:2;
 }
 

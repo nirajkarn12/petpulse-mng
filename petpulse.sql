@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 18, 2026 at 10:21 AM
+-- Generation Time: May 26, 2026 at 08:48 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.2.10
 
@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `devices` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `device_id` (`device_id`),
   KEY `pet_id` (`pet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `devices`
@@ -230,7 +230,10 @@ CREATE TABLE IF NOT EXISTS `devices` (
 
 INSERT INTO `devices` (`id`, `pet_id`, `device_id`, `device_name`, `mac_address`, `firmware_version`, `storage_used_mb`, `storage_total_mb`, `battery_percent`, `last_synced`, `gps_status`, `heart_rate_status`, `bluetooth_status`, `temp_status`) VALUES
 (1, 45, 'PP-8842-XC', 'Smart Collar Pro - Max', '00:1B:44:11:3A:B7', 'v2.4.1', 12, 64, 84, '2026-04-27 06:20:40', 'Active', 'Logging', 'Connected', 'Normal'),
-(2, 2, 'PP-9921-AB', 'Smart Collar Pro - Bella', '00:1C:55:22:4B:C8', 'v2.4.0', 8, 64, 15, '2026-04-27 06:20:40', 'Active', 'Logging', 'Connected', 'Normal');
+(2, 2, 'PP-9921-AB', 'Smart Collar Pro - Bella', '00:1C:55:22:4B:C8', 'v2.4.0', 8, 64, 15, '2026-04-27 06:20:40', 'Active', 'Logging', 'Connected', 'Normal'),
+(3, 67, 'TEST-DEVICE-001', 'Smart Collar Pro', 'ddgdgdgdg', 'v2.4.1', 12, 64, 10, '2026-05-25 12:02:38', 'Active', 'Logging', 'Disconnected', 'Normal'),
+(5, 67, 'TEST-DEVICE-004556', 'Smart Collar Pro', 'ddgdgdgdg', 'v2.4.1', 50000000, 64, 100, '2026-05-25 12:04:24', 'Active', 'Logging', 'Connected', 'Normal'),
+(6, 67, 'TEST-DEVICE-0045565', 'Smart Collar Pro', 'ddgdgdgdg', 'v2.4.1', 0, 64, 100, '2026-05-25 12:15:34', 'Active', 'Logging', 'Connected', 'Normal');
 
 -- --------------------------------------------------------
 
@@ -248,7 +251,7 @@ CREATE TABLE IF NOT EXISTS `medical_notes` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `pet_id` (`pet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `medical_notes`
@@ -259,7 +262,8 @@ INSERT INTO `medical_notes` (`id`, `pet_id`, `category`, `title`, `description`,
 (2, 33, 'Allergy', 'Dust Mites', 'Seasonal allergies cause sneezing', '2026-04-27 06:20:40'),
 (3, 45, 'Medication', 'Apoquel 16mg', 'For allergy relief, twice daily as needed', '2026-04-27 06:20:40'),
 (5, 32, '', 'dsds', 'sdsdsds', '2026-04-28 10:02:33'),
-(6, 54, 'Medication', 'fg', 'fg', '2026-05-13 16:22:35');
+(6, 54, 'Medication', 'fg', 'fg', '2026-05-13 16:22:35'),
+(8, 67, 'Allergy', ' n', 'bnbnbnbn', '2026-05-25 12:12:24');
 
 -- --------------------------------------------------------
 
@@ -281,18 +285,73 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `pet_id` (`pet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `notifications`
 --
 
 INSERT INTO `notifications` (`id`, `user_id`, `pet_id`, `type`, `title`, `message`, `is_read`, `link`, `created_at`) VALUES
-(2, 3, 31, 'battery', 'Low Battery Warning', 'Smart Collar Pro battery is at 15%. Please charge soon to maintain GPS tracking.', 1, 'device_status.php', '2026-04-27 06:20:40'),
-(3, 3, 31, 'safe_zone', 'Safe Zone Entered', 'Bella has successfully entered the designated “Home” safe zone.', 1, '#', '2026-04-27 06:20:40'),
-(4, 15, 45, 'firmware', 'Firmware Update Complete', 'Collar successfully updated to version 2.4.1.', 1, '#', '2026-04-27 06:20:40'),
-(5, 18, 64, 'device', 'Device Offline', 'bunny\'s smart collar is offline. Check connection.', 0, 'devices.php', '2026-05-18 15:43:51'),
-(6, 15, 67, 'device', 'Device Offline', 'bunny\'s smart collar is offline. Check connection.', 0, 'devices.php', '2026-05-18 15:43:51');
+(24, 15, 67, 'admin_created', 'Device Created', 'An administrator added Device for bunny (Smart Collar Pro).', 0, 'device.php', '2026-05-25 12:15:34'),
+(25, 15, 67, 'vaccination', 'Vaccination Due Soon', 'DHPP (1-year) for bunny is due on 2026-05-31. Please schedule vaccination.', 0, 'vaccinations.php', '2026-05-25 12:15:34'),
+(26, 15, 67, 'overdue_vaccination', 'Vaccination Overdue', 'halwa for bunny was due on 2026-05-12.', 0, 'vaccinations.php', '2026-05-25 12:15:34'),
+(27, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 12:32:03'),
+(28, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 12:32:03'),
+(29, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 12:32:03'),
+(30, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 12:32:13'),
+(31, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 12:32:13'),
+(32, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 12:32:13'),
+(33, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 12:32:21'),
+(34, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 12:32:21'),
+(35, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 12:32:21'),
+(36, 15, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (Highest Quality Care For Pets You\'ll Love).', 0, 'index.php', '2026-05-26 12:46:47'),
+(37, 18, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (Highest Quality Care For Pets You\'ll Love).', 0, 'index.php', '2026-05-26 12:46:47'),
+(38, 19, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (Highest Quality Care For Pets You\'ll Love).', 0, 'index.php', '2026-05-26 12:46:47'),
+(39, 15, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars ).', 0, 'index.php', '2026-05-26 12:48:24'),
+(40, 18, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars ).', 0, 'index.php', '2026-05-26 12:48:24'),
+(41, 19, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars ).', 0, 'index.php', '2026-05-26 12:48:24'),
+(42, 15, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 12:48:40'),
+(43, 18, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 12:48:40'),
+(44, 19, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 12:48:40'),
+(45, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 13:10:12'),
+(46, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 13:10:12'),
+(47, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 13:10:12'),
+(48, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 13:10:24'),
+(49, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 13:10:24'),
+(50, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Mei ut errem legimus periculis eos liber).', 0, 'blog.php', '2026-05-26 13:10:24'),
+(51, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 13:10:36'),
+(52, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 13:10:36'),
+(53, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 13:10:36'),
+(54, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 13:10:49'),
+(55, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 13:10:49'),
+(56, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 13:10:49'),
+(57, 15, NULL, 'admin_deleted', 'Blog post Deleted', 'An administrator removed Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 13:10:58'),
+(58, 18, NULL, 'admin_deleted', 'Blog post Deleted', 'An administrator removed Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 13:10:58'),
+(59, 19, NULL, 'admin_deleted', 'Blog post Deleted', 'An administrator removed Blog post (Cu vel choro exerci pri et oratio iisque).', 0, 'blog.php', '2026-05-26 13:10:58'),
+(60, 15, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 13:11:07'),
+(61, 18, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 13:11:07'),
+(62, 19, NULL, 'admin_updated', 'Blog post Updated', 'An administrator updated Blog post (Epicurei necessitatibus eu facilisi postulant ).', 0, 'blog.php', '2026-05-26 13:11:07'),
+(63, 15, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 14:24:13'),
+(64, 18, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 14:24:13'),
+(65, 19, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 14:24:13'),
+(66, 15, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 14:24:17'),
+(67, 18, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 14:24:17'),
+(68, 19, NULL, 'admin_updated', 'Slider Updated', 'An administrator updated Slider (smart pet collars with AIoT capabilities.).', 0, 'index.php', '2026-05-26 14:24:17'),
+(69, 15, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (How to find an item?).', 0, 'faq.php', '2026-05-26 14:29:18'),
+(70, 18, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (How to find an item?).', 0, 'faq.php', '2026-05-26 14:29:18'),
+(71, 19, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (How to find an item?).', 0, 'faq.php', '2026-05-26 14:29:18'),
+(72, 15, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ ( I received a defective/damaged item, can I get a refund?).', 0, 'faq.php', '2026-05-26 14:29:45'),
+(73, 18, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ ( I received a defective/damaged item, can I get a refund?).', 0, 'faq.php', '2026-05-26 14:29:45'),
+(74, 19, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ ( I received a defective/damaged item, can I get a refund?).', 0, 'faq.php', '2026-05-26 14:29:45'),
+(75, 15, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (When are ‘Returns’ not possible?).', 0, 'faq.php', '2026-05-26 14:29:54'),
+(76, 18, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (When are ‘Returns’ not possible?).', 0, 'faq.php', '2026-05-26 14:29:54'),
+(77, 19, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (When are ‘Returns’ not possible?).', 0, 'faq.php', '2026-05-26 14:29:54'),
+(78, 15, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (What are the items that cannot be returned?).', 0, 'faq.php', '2026-05-26 14:30:03'),
+(79, 18, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (What are the items that cannot be returned?).', 0, 'faq.php', '2026-05-26 14:30:03'),
+(80, 19, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (What are the items that cannot be returned?).', 0, 'faq.php', '2026-05-26 14:30:03'),
+(81, 15, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (How to find an item?).', 0, 'faq.php', '2026-05-26 14:30:10'),
+(82, 18, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (How to find an item?).', 0, 'faq.php', '2026-05-26 14:30:10'),
+(83, 19, NULL, 'admin_updated', 'FAQ Updated', 'An administrator updated FAQ (How to find an item?).', 0, 'faq.php', '2026-05-26 14:30:10');
 
 -- --------------------------------------------------------
 
@@ -353,14 +412,40 @@ CREATE TABLE IF NOT EXISTS `pet_health_records` (
   `deep_sleep_minutes` int DEFAULT NULL,
   `emotion_state` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `pet_health_records`
 --
 
 INSERT INTO `pet_health_records` (`id`, `pet_id`, `recorded_at`, `heart_rate_bpm`, `body_temp_f`, `activity_score`, `active_minutes`, `distance_miles`, `deep_sleep_minutes`, `emotion_state`) VALUES
-(1, 58, '2026-04-27 06:59:00', 78, 101.10, 7, 45, 1.20, 30000, 'Happy');
+(1, 67, '2026-04-27 06:59:00', 170, 101.10, 7, 45, 1.20, 30000, 'Happy');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_category`
+--
+
+DROP TABLE IF EXISTS `tbl_category`;
+CREATE TABLE IF NOT EXISTS `tbl_category` (
+  `category_id` int NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(255) NOT NULL,
+  `category_slug` varchar(255) NOT NULL,
+  `meta_title` varchar(255) DEFAULT NULL,
+  `meta_keyword` text,
+  `meta_description` text,
+  PRIMARY KEY (`category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tbl_category`
+--
+
+INSERT INTO `tbl_category` (`category_id`, `category_name`, `category_slug`, `meta_title`, `meta_keyword`, `meta_description`) VALUES
+(1, 'Pet Care', 'pet-care', 'Pet Care Blogs', 'pet care,dog care,cat care', 'Latest blogs and articles about pet care'),
+(2, 'Dog Training', 'dog-training', 'Dog Training Tips', 'dog training,pets', 'Professional dog training blogs'),
+(3, 'Veterinary', 'veterinary', 'Veterinary Blog', 'vet,veterinary,pet health', 'Pet health and veterinary related blogs');
 
 -- --------------------------------------------------------
 
@@ -637,7 +722,15 @@ CREATE TABLE IF NOT EXISTS `tbl_customer_message` (
   `order_detail` text NOT NULL,
   `cust_id` int NOT NULL,
   PRIMARY KEY (`customer_message_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_customer_message`
+--
+
+INSERT INTO `tbl_customer_message` (`customer_message_id`, `subject`, `message`, `order_detail`, `cust_id`) VALUES
+(9, 'fgv', 'Name: ram\nEmail: pandey@gmail.com\n\nvccvcv', 'Phone: 9999999999 | Date: 5/26/2026 | Time: 12:00am', 0),
+(10, 'fgv', 'Name: ram\nEmail: pandey@gmail.com\n\nvccvcv', 'Service: Dog Walk | Phone: 9999999999 | Date: 5/26/2026 | Time: 12:00am', 0);
 
 -- --------------------------------------------------------
 
@@ -658,11 +751,11 @@ CREATE TABLE IF NOT EXISTS `tbl_faq` (
 --
 
 INSERT INTO `tbl_faq` (`faq_id`, `faq_title`, `faq_content`) VALUES
-(1, 'How to find an item?', '<h3 class=\"checkout-complete-box font-bold txt16\" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; margin: 0.2rem 0px 0.5rem; padding: 0px; line-height: 1.4; background-color: rgb(250, 250, 250);\"><font color=\"#222222\" face=\"opensans, Helvetica Neue, Helvetica, Helvetica, Arial, sans-serif\"><span style=\"font-size: 15.7143px;\">We have a wide range of fabulous products to choose from.</span></font></h3><h3 class=\"checkout-complete-box font-bold txt16\" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; margin: 0.2rem 0px 0.5rem; padding: 0px; line-height: 1.4; background-color: rgb(250, 250, 250);\"><span style=\"font-size: 15.7143px; color: rgb(34, 34, 34); font-family: opensans, \"Helvetica Neue\", Helvetica, Helvetica, Arial, sans-serif;\">Tip 1: If you\'re looking for a specific product, use the keyword search box located at the top of the site. Simply type what you are looking for, and prepare to be amazed!</span></h3><h3 class=\"checkout-complete-box font-bold txt16\" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; margin: 0.2rem 0px 0.5rem; padding: 0px; line-height: 1.4; background-color: rgb(250, 250, 250);\"><font color=\"#222222\" face=\"opensans, Helvetica Neue, Helvetica, Helvetica, Arial, sans-serif\"><span style=\"font-size: 15.7143px;\">Tip 2: If you want to explore a category of products, use the Shop Categories in the upper menu, and navigate through your favorite categories where we\'ll feature the best products in each.</span></font><br><br></h3>\r\n'),
+(1, 'How to find an item?', '<h3 class=\"checkout-complete-box font-bold txt16\" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; margin: 0.2rem 0px 0.5rem; padding: 0px; line-height: 1.4; background-color: rgb(250, 250, 250);\"><span style=\"color: rgb(10, 10, 10); font-family: opensans, &quot;Helvetica Neue&quot;, Helvetica, Helvetica, Arial, sans-serif; font-size: 14px; text-align: center; background-color: rgb(255, 255, 255);\">You have 15 days to make a refund request after your order has been delivered.</span></h3><h3 class=\"checkout-complete-box font-bold txt16\" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; margin: 0.2rem 0px 0.5rem; padding: 0px; line-height: 1.4; background-color: rgb(250, 250, 250);\"><br></h3>\r\n'),
 (2, 'What is your return policy?', '<p><span style=\"color: rgb(10, 10, 10); font-family: opensans, &quot;Helvetica Neue&quot;, Helvetica, Helvetica, Arial, sans-serif; font-size: 14px; text-align: center;\">You have 15 days to make a refund request after your order has been delivered.</span><br></p>\r\n'),
-(3, ' I received a defective/damaged item, can I get a refund?', '<p>In case the item you received is damaged or defective, you could return an item in the same condition as you received it with the original box and/or packaging intact. Once we receive the returned item, we will inspect it and if the item is found to be defective or damaged, we will process the refund along with any shipping fees incurred.<br></p>\r\n'),
-(4, 'When are ‘Returns’ not possible?', '<p class=\"a  \" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; line-height: 1.6; margin-bottom: 0.714286rem; padding: 0px; font-size: 14px; color: rgb(10, 10, 10); font-family: opensans, &quot;Helvetica Neue&quot;, Helvetica, Helvetica, Arial, sans-serif; background-color: rgb(250, 250, 250);\">There are a few certain scenarios where it is difficult for us to support returns:</p><ol style=\"box-sizing: inherit; line-height: 1.6; margin-right: 0px; margin-bottom: 0px; margin-left: 1.25rem; padding: 0px; list-style-position: outside; color: rgb(10, 10, 10); font-family: opensans, &quot;Helvetica Neue&quot;, Helvetica, Helvetica, Arial, sans-serif; font-size: 14px; background-color: rgb(250, 250, 250);\"><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Return request is made outside the specified time frame, of 15 days from delivery.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Product is used, damaged, or is not in the same condition as you received it.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Specific categories like innerwear, lingerie, socks and clothing freebies etc.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Defective products which are covered under the manufacturer\'s warranty.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Any consumable item which has been used or installed.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Products with tampered or missing serial numbers.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Anything missing from the package you\'ve received including price tags, labels, original packing, freebies and accessories.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Fragile items, hygiene related items.</li></ol>\r\n'),
-(5, 'What are the items that cannot be returned?', '<p>The items that can not be returned are:</p><p>Clearance items clearly marked as such and displaying a No-Return Policy<br></p><p>When the offer notes states so specifically are items that cannot be returned.</p><p>Items that fall into the below product types-</p><ul><li>Underwear</li><li>Lingerie</li><li>Socks</li><li>Software</li><li>Music albums</li><li>Books</li><li>Swimwear</li><li>Beauty &amp; Fragrances</li><li>Hosiery</li></ul><p>Also, any consumable items that are used or installed cannot be returned. As outlined in consumer Protection Rights and concerning section on non-returnable items<br></p>');
+(3, ' I received a defective/damaged item, can I get a refund?', '<p><span style=\"color: rgb(10, 10, 10); font-family: opensans, &quot;Helvetica Neue&quot;, Helvetica, Helvetica, Arial, sans-serif; font-size: 14px; text-align: center;\">You have 15 days to make a refund request after your order has been delivered.</span></p>\r\n'),
+(4, 'When are ‘Returns’ not possible?', '<p class=\"a  \" style=\"box-sizing: inherit; text-rendering: optimizeLegibility; line-height: 1.6; margin-bottom: 0.714286rem; padding: 0px; font-size: 14px; color: rgb(10, 10, 10); font-family: opensans, \" helvetica=\"\" neue\",=\"\" helvetica,=\"\" arial,=\"\" sans-serif;=\"\" background-color:=\"\" rgb(250,=\"\" 250,=\"\" 250);\"=\"\">There are a few certain scenarios where it is difficult for us to support returns:</p><ol style=\"box-sizing: inherit; line-height: 1.6; margin-right: 0px; margin-bottom: 0px; margin-left: 1.25rem; padding: 0px; list-style-position: outside; color: rgb(10, 10, 10); font-family: opensans, \" helvetica=\"\" neue\",=\"\" helvetica,=\"\" arial,=\"\" sans-serif;=\"\" font-size:=\"\" 14px;=\"\" background-color:=\"\" rgb(250,=\"\" 250,=\"\" 250);\"=\"\"><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Return request is made outside the specified time frame, of 15 days from delivery.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Product is used, damaged, or is not in the same condition as you received it.</li><li style=\"box-sizing: inherit; margin: 0px; padding: 0px; font-size: inherit;\">Specific categories like innerwear, lingerie, socks and clothing freebies etc.</li></ol>\r\n'),
+(5, 'What are the items that cannot be returned?', '<p>The items that can not be returned are:</p><p>Clearance items clearly marked as such and displaying a No-Return Policy<br></p><p>When the offer notes states so specifically are items that cannot be returned.</p><p>Also, any consumable items that are used or installed cannot be returned. As outlined in consumer Protection Rights and concerning section on non-returnable items<br></p>');
 
 -- --------------------------------------------------------
 
@@ -879,8 +972,7 @@ CREATE TABLE IF NOT EXISTS `tbl_owner` (
 INSERT INTO `tbl_owner` (`owner_id`, `owner_name`, `owner_phone`, `owner_email`, `password`, `owner_address`, `owner_area`, `owner_location`, `owner_photo`, `no_of_pets`, `is_active`, `created_at`, `reset_token`, `token_expires`) VALUES
 (15, 'sajan', '9999999999', 'nirajk_mi@yonefu.info', '$2y$10$o6Ckj9qF358sLl7DZEjcsu6RAUokKT3.1tX2REifvvsAm9Uct4J2O', 'Manamaiju\r\nkathmandu', 'thamel', 'kathmandu', 'owner-15.jpg', 2, 1, '2026-05-12 20:12:57', NULL, NULL),
 (18, 'shyam', '9999999999', '123@admin.com', '$2y$10$MBcDFyRaHiB2Hi8C/w53n.KimAgXusaAEDTrc4QzRFYpbuI8/LI8C', 'Manamaiju\r\nkathmandu', 'fvcvvvc', 'kathmandu', 'owner-18.jpg', 1, 1, '2026-05-14 15:29:24', NULL, NULL),
-(19, 'saopro', '9999999999', '1234@admin.com', '$2y$10$334R/ri9l3Agc85Ii5Z6kef/SVj1W8VtwWFBtla/pLXmYQAPTqKZ2', 'Manamaiju\r\nkathmandu', 'dfdfd', 'kathmandu', 'owner-19.jpg', 0, 1, '2026-05-14 22:46:19', NULL, NULL),
-(21, 'sajan', '9999999999', 'admin@admin.com', '$2y$10$7jdw8fqnmYV5gluDEs1rneeHgJR2XCnzXNAb.jLO9sDUNNoyZqlVi', 'Manamaiju\r\nkathmandu', 'thamel', 'kathmandu', 'owner-21.jpeg', 0, 1, '2026-05-18 04:59:11', NULL, NULL);
+(19, 'saopro', '9999999999', '1234@admin.com', '$2y$10$334R/ri9l3Agc85Ii5Z6kef/SVj1W8VtwWFBtla/pLXmYQAPTqKZ2', 'Manamaiju\r\nkathmandu', 'dfdfd', 'kathmandu', 'owner-19.jpg', 0, 1, '2026-05-14 22:46:19', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -930,7 +1022,7 @@ CREATE TABLE IF NOT EXISTS `tbl_page` (
 --
 
 INSERT INTO `tbl_page` (`id`, `about_title`, `about_content`, `about_banner`, `about_meta_title`, `about_meta_keyword`, `about_meta_description`, `faq_title`, `faq_banner`, `faq_meta_title`, `faq_meta_keyword`, `faq_meta_description`, `blog_title`, `blog_banner`, `blog_meta_title`, `blog_meta_keyword`, `blog_meta_description`, `contact_title`, `contact_banner`, `contact_meta_title`, `contact_meta_keyword`, `contact_meta_description`, `pgallery_title`, `pgallery_banner`, `pgallery_meta_title`, `pgallery_meta_keyword`, `pgallery_meta_description`, `vgallery_title`, `vgallery_banner`, `vgallery_meta_title`, `vgallery_meta_keyword`, `vgallery_meta_description`) VALUES
-(1, 'About Us', '<p style=\"border: 0px solid; margin-top: 1.5rem; margin-bottom: 0px;\">Welcome to Ecommerce PHP Project!</p><p style=\"border: 0px solid; margin-top: 1.5rem; margin-bottom: 0px;\"><span style=\"border: 0px solid;\">We aim to offer our customers a variety of the latest [PRODUCTS_CATEGORY_NAME]. Weâ€™ve come a long way, so we know exactly which direction to take when supplying you with high quality yet budget-friendly products. We offer all of this while providing excellent customer service and friendly support.</span></p><p style=\"border: 0px solid; margin-top: 1.5rem; margin-bottom: 0px;\"><span style=\"border: 0px solid;\">We always keep an eye on the latest trends in [PRODUCTS CATEGORY NAME] and put our customersâ€™ wishes first. That is why we have satisfied customers all over the world, and are thrilled to be a part of the [PRODUCTS CATEGORY NAME] industry.</span></p><p style=\"border: 0px solid; margin-top: 1.5rem; margin-bottom: 0px;\"><span style=\"border: 0px solid;\">The interests of our customers are always top priority for us, so we hope you will enjoy our products as much as we enjoy making them available to you.</span></p><p style=\"\">We make sure you get the best quality outfits with hassle free returns and exchanges policy. We ensure what you see is exactly what you get!</p><ul><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">Low Price Guarantee</span></font></li><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">24/7 Customer Support</span></font></li><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">E-Mail - Text - Call</span></font></li><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">We are here for you 24/7 online and via phone.</span></font></li><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">Sizing & Color</span></font></li><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">Worldwide Shipping</span></font></li><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">Weâ€™d love to expand our business Internationally soon.</span></font></li><li style=\"text-align: justify;\"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">Easy Returns</span></font></li></ul><p style=\"text-align: justify; \"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">Bought an outfit but want to return it? We have a 3 days easy return policy. Please mail us at support@ecommercephp.com for more details.</span></font></p><p style=\"text-align: justify; \"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\"><b>Dream Dresses for Every Occasion</b></span></font></p><p style=\"text-align: justify; \"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">Fashionys.com carries all carefully handpicked by our stylists. If youâ€™re interested in a particular model please mail us we will try our best to offer you the loved dress.</span></font></p><p style=\"text-align: justify; \"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\"><b>Verified Security</b></span></font></p><p style=\"text-align: justify; \"><font face=\"apercu, Arial, sans-serif\"><span style=\"font-size: 14px;\">All our transactions are Verified by Norton and with the highest standards of security. Plus, there\'s a lot to go around too through regular exciting offers and gifts, so spread the word and refer us to everyone from your family, friends and colleagues and get rewarded for it. And to top it all, you can share your user experience by posting reviews. Donâ€™t wait any longer Sign up with us now! start stalking, start buying and start loving and start Introducing the beauty in you.</span></font></p>\r\n', 'about-banner.jpg', 'Ecommerce PHP - About Us', 'about, about us, about fashion, about company, about ecommerce php project', 'Our goal has always been to get the best in you we brought a huge collection whether youâ€™re attending a party, wedding, and all those events that require a WOW dress.', 'FAQ', 'faq-banner.jpg', 'Fashionys.com - FAQ', '', '', 'Blog', 'blog-banner.jpg', 'Ecommerce - Blog', '', '', 'Contact Us', 'contact-banner.jpg', 'Fashionys.com - Contact', '', '', 'Photo Gallery', 'pgallery-banner.jpg', 'Ecommerce - Photo Gallery', '', '', 'Video Gallery', 'vgallery-banner.jpg', 'Ecommerce - Video Gallery', '', '');
+(1, 'About Us', '<p style=\"margin: 1.5rem 0px 0px; border: 0px solid;\"><span style=\"color: rgb(99, 0, 0); font-weight: bold;\">Welcome to PetPulse</span>\r\n<br class=\"Apple-interchange-newline\"></p><p style=\"margin: 1.5rem 0px 0px; border: 0px solid;\"><span style=\"border: 0px solid;\">We aim to offer our customers a variety of the latest [PRODUCTS_CATEGORY_NAME]. Weâ€™ve come a long way, so we know exactly which direction to take when supplying you with high quality yet budget-friendly products. We offer all of this while providing excellent customer service and friendly support.</span></p><p style=\"margin: 1.5rem 0px 0px; border: 0px solid;\"><span style=\"border: 0px solid;\">We always keep an eye on the latest trends in [PRODUCTS CATEGORY NAME] and put our customersâ€™ wishes first. That is why we have satisfied customers all over the world, and are thrilled to be a part of the [PRODUCTS CATEGORY NAME] industry.</span></p>\r\n', 'about-banner.jpg', 'PetPulse- About Us', 'about, about us, about fashion, about company, about ecommerce php project', 'Our goal has always been to get the best in you we brought a huge collection whether youâ€™re attending a party, wedding, and all those events that require a WOW dress.', 'FAQ', 'faq-banner.png', 'PetPulse - FAQ', '', '', 'Blog', 'blog-banner.jpg', 'Ecommerce - Blog', '', '', 'Contact Us', 'contact-banner.png', 'PetPulse- Contact', '', '', 'Photo Gallery', 'pgallery-banner.jpg', 'Ecommerce - Photo Gallery', '', '', 'Video Gallery', 'vgallery-banner.jpg', 'Ecommerce - Video Gallery', '', '');
 
 -- --------------------------------------------------------
 
@@ -980,16 +1072,14 @@ CREATE TABLE IF NOT EXISTS `tbl_pet` (
   `pet_image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`pet_id`),
   KEY `owner_id` (`owner_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `tbl_pet`
 --
 
 INSERT INTO `tbl_pet` (`pet_id`, `owner_id`, `pet_name`, `pet_type`, `pet_breed`, `pet_age`, `weight_lbs`, `daily_goal_minutes`, `pet_latitude`, `pet_longitude`, `created_at`, `updated_at`, `pet_image`) VALUES
-(64, 18, 'bunny', 'Dog', 'red', 3, NULL, NULL, 27.8544642, 86.7905233, '2026-05-15 10:04:02', '2026-05-15 10:30:15', 'pet-64-1778820315.jpg'),
-(67, 15, 'bunny', 'Cat', 'red', 3, NULL, NULL, 26.5202107, 87.2797947, '2026-05-18 10:25:53', '2026-05-18 10:26:54', 'pet-67-1779079314.jpg'),
-(68, 15, 'ram', 'Dog', 'red', 7, NULL, 50, 26.5202107, 87.2797947, '2026-05-18 16:04:02', '2026-05-18 16:04:40', 'pet-1779099542-8660.png');
+(67, 15, 'bunny', 'Cat', 'red', 3, NULL, 60, 26.5202107, 87.2797947, '2026-05-18 10:25:53', '2026-05-25 12:09:36', 'pet-67-1779690276.jpg');
 
 -- --------------------------------------------------------
 
@@ -1037,24 +1127,16 @@ CREATE TABLE IF NOT EXISTS `tbl_post` (
   `meta_keyword` text NOT NULL,
   `meta_description` text NOT NULL,
   PRIMARY KEY (`post_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_post`
 --
 
 INSERT INTO `tbl_post` (`post_id`, `post_title`, `post_slug`, `post_content`, `post_date`, `photo`, `category_id`, `total_view`, `meta_title`, `meta_keyword`, `meta_description`) VALUES
-(1, 'Cu vel choro exerci pri et oratio iisque', 'cu-vel-choro-exerci-pri-et-oratio-iisque', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-1.jpg', 3, 14, 'Cu vel choro exerci pri et oratio iisque', '', ''),
-(2, 'Epicurei necessitatibus eu facilisi postulant ', 'epicurei-necessitatibus-eu-facilisi-postulant-', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-2.jpg', 3, 6, 'Epicurei necessitatibus eu facilisi postulant ', '', ''),
-(3, 'Mei ut errem legimus periculis eos liber', 'mei-ut-errem-legimus-periculis-eos-liber', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-3.jpg', 3, 1, 'Mei ut errem legimus periculis eos liber', '', ''),
-(4, 'Id pro unum pertinax oportere vel', 'id-pro-unum-pertinax-oportere-vel', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-4.jpg', 4, 0, 'Id pro unum pertinax oportere vel', '', ''),
-(5, 'Tollit cetero cu usu etiam evertitur', 'tollit-cetero-cu-usu-etiam-evertitur', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-5.jpg', 4, 24, 'Tollit cetero cu usu etiam evertitur', '', ''),
-(6, 'Omnes ornatus qui et te aeterno', 'omnes-ornatus-qui-et-te-aeterno', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-6.jpg', 4, 2, 'Omnes ornatus qui et te aeterno', '', ''),
-(7, 'Vix tale noluisse voluptua ad ne', 'vix-tale-noluisse-voluptua-ad-ne', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-7.jpg', 2, 0, 'Vix tale noluisse voluptua ad ne', '', ''),
-(8, 'Liber utroque vim an ne his brute', 'liber-utroque-vim-an-ne-his-brute', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-8.jpg', 2, 12, 'Liber utroque vim an ne his brute', '', ''),
-(9, 'Nostrum copiosae argumentum has', 'nostrum-copiosae-argumentum-has', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-9.jpg', 1, 12, 'Nostrum copiosae argumentum has', '', ''),
-(10, 'An labores explicari qui eu', 'an-labores-explicari-qui-eu', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-10.jpg', 1, 4, 'An labores explicari qui eu', '', ''),
-(11, 'Lorem ipsum dolor sit amet', 'lorem-ipsum-dolor-sit-amet', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'news-11.jpg', 1, 18, 'Lorem ipsum dolor sit amet', '', '');
+(2, 'Epicurei necessitatibus eu facilisi postulant ', 'epicurei-necessitatibus-eu-facilisi-postulant-', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'post-2.jpg', 3, 7, 'Epicurei necessitatibus eu facilisi postulant ', '', ''),
+(3, 'Mei ut errem legimus periculis eos liber', 'mei-ut-errem-legimus-periculis-eos-liber', '<p>Lorem ipsum dolor sit amet, qui case probo velit no, an postea scaevola partiendo mei. Id mea fuisset perpetua referrentur. Ut everti ceteros mei, alii discere eum no, duo id malis iuvaret. Ad sint everti accusam vel, ea viderer suscipiantur pri. Brute option minimum in cum, ignota iuvaret an pro.</p>\r\n\r\n<p>Solum atqui intellegebat mea an. Ne ius alterum aliquam. Ea nec populo aliquid mentitum, vis in meliore atomorum, sanctus consequat vituperatoribus duo ea. Ad doctus pertinacia ius, virtute fuisset id has, eum ut modo principes. Qui eu labore adversarium, oporteat delicata qui ut, an qui meliore principes. Id aliquid dolorum nam.</p>\r\n\r\n<p>Reque pericula philosophia ut mei, volumus eligendi mandamus has an. In nobis consulatu pri, has at timeam scaevola, has simul quaeque et. Te nec sale accumsan. Dolorem prodesset efficiendi sea ea.</p>\r\n\r\n<p>Et habeo modus debitis pri, vel quis fierent albucius ne. Ea animal meliore usu, nec etiam dolorum atomorum at, nam in audire mandamus omittantur. Cu ius dicam officiis molestiae, mea volumus officiis cotidieque no. Ut vel possim interpretaris, idque probatus antiopam has ad. Facilisi qualisque te sea, no dolorum mnesarchum usu.</p>\r\n\r\n<p>Eum tota graeci impetus an, eirmod invenire rationibus ne mel. Ignota habemus eum ex, vis omnesque delicata perpetua an. Sit id modo invidunt sapientem, ne eum vocibus dolores phaedrum. Case praesent appellantur eu per.</p>\r\n', '05-09-2017', 'post-3.jpg', 3, 3, 'Mei ut errem legimus periculis eos liber', '', ''),
+(12, 'Mei ut errem legimus periculis eos liber', 'mei-ut-errem-legimus-periculis-eos-liber', 'cvcv', '2026-05-18', 'post-12.jpg', 1, 0, 'cvvcv', 'cvcv', 'cvcv');
 
 -- --------------------------------------------------------
 
@@ -1144,7 +1226,7 @@ CREATE TABLE IF NOT EXISTS `tbl_settings` (
 --
 
 INSERT INTO `tbl_settings` (`id`, `logo`, `favicon`, `footer_about`, `footer_copyright`, `contact_address`, `contact_email`, `contact_phone`, `contact_fax`, `contact_map_iframe`, `receive_email`, `receive_email_subject`, `receive_email_thank_you_message`, `forget_password_message`, `total_recent_post_footer`, `total_popular_post_footer`, `total_recent_post_sidebar`, `total_popular_post_sidebar`, `total_featured_product_home`, `total_latest_product_home`, `total_popular_product_home`, `meta_title_home`, `meta_keyword_home`, `meta_description_home`, `banner_login`, `banner_registration`, `banner_forget_password`, `banner_reset_password`, `banner_search`, `banner_cart`, `banner_checkout`, `banner_product_category`, `banner_blog`, `cta_title`, `cta_content`, `cta_read_more_text`, `cta_read_more_url`, `cta_photo`, `featured_product_title`, `featured_product_subtitle`, `latest_product_title`, `latest_product_subtitle`, `popular_product_title`, `popular_product_subtitle`, `testimonial_title`, `testimonial_subtitle`, `testimonial_photo`, `blog_title`, `blog_subtitle`, `newsletter_text`, `paypal_email`, `stripe_public_key`, `stripe_secret_key`, `bank_detail`, `before_head`, `after_body`, `before_body`, `home_service_on_off`, `home_welcome_on_off`, `home_featured_product_on_off`, `home_latest_product_on_off`, `home_popular_product_on_off`, `home_testimonial_on_off`, `home_blog_on_off`, `newsletter_on_off`, `ads_above_welcome_on_off`, `ads_above_featured_product_on_off`, `ads_above_latest_product_on_off`, `ads_above_popular_product_on_off`, `ads_above_testimonial_on_off`, `ads_category_sidebar_on_off`, `qr_code`) VALUES
-(1, 'logo.png', 'favicon.png', '<p>Lorem ipsum dolor sit amet, omnis signiferumque in mei, mei ex enim concludaturque. Senserit salutandi euripidis no per, modus maiestatis scribentur est an.Â Ea suas pertinax has.</p>\r\n', 'Copyright @techgathanepal', 'lolang-5,balaju,Kathmandu', 'nirajkarna66@gmail.com', '+977 9810110800', '', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.1700699004828!2d85.30253487453717!3d27.742899923924167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb18d109dd724d%3A0x71aa9a778a537f29!2sNew%20Era%20Academy!5e0!3m2!1sen!2snp!4v1777351504564!5m2!1sen!2snp\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', 'support@techgathanepal.com', 'Visitor Email Message fromtechgathanepal', 'Thank you for sending email. We will contact you shortly.', 'A confirmation link is sent to your email address. You will get the password reset information in there.', 4, 4, 5, 5, 5, 6, 8, 'Ecommerce PHP', 'online fashion store, garments shop, online garments', 'ecommerce php project with mysql database', 'banner_login.jpg', 'banner_registration.jpg', 'banner_forget_password.jpg', 'banner_reset_password.jpg', 'banner_search.jpg', 'banner_cart.jpg', 'banner_checkout.jpg', 'banner_product_category.jpg', 'banner_blog.jpg', 'Welcome To Our Ecommerce Website', 'Lorem ipsum dolor sit amet, an labores explicari qui, eu nostrum copiosae argumentum has. Latine propriae quo no, unum ridens expetenda id sit, \r\nat usu eius eligendi singulis. Sea ocurreret principes ne. At nonumy aperiri pri, nam quodsi copiosae intellegebat et, ex deserunt euripidis usu. ', 'Read More', '#', 'cta.jpg', 'Featured Products', 'Our list on Top Featured Products', 'Latest Products', 'Our list of recently added products', 'Popular Products', 'Popular products based on customer\'s choice', 'Testimonials', 'See what our clients tell about us', 'testimonial.jpg', 'Latest Blog', 'See all our latest articles and news from below', 'Sign-up to our newsletter for latest promotions and discounts.', '', '', '', '', '', '', '', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'qr_code_1777533788.png');
+(1, 'logo.jpg', 'favicon.png', '<p>Lorem ipsum dolor sit amet, omnis signiferumque in mei, mei ex enim concludaturque. Senserit salutandi euripidis no per, modus maiestatis scribentur est an.Â Ea suas pertinax has.</p>\r\n', 'Copyright @techgathanepal', 'lolang-5,balaju,Kathmandu', 'nirajkarna66@gmail.com', '+977 9810110800', '', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.1700699004828!2d85.30253487453717!3d27.742899923924167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb18d109dd724d%3A0x71aa9a778a537f29!2sNew%20Era%20Academy!5e0!3m2!1sen!2snp!4v1777351504564!5m2!1sen!2snp\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', 'support@techgathanepal.com', 'Visitor Email Message fromtechgathanepal', 'Thank you for sending email. We will contact you shortly.', 'A confirmation link is sent to your email address. You will get the password reset information in there.', 4, 4, 5, 5, 5, 6, 8, 'PetPulse', 'online fashion store, garments shop, online garments', 'PetPulse', 'banner_login.jpg', 'banner_registration.jpg', 'banner_forget_password.jpg', 'banner_reset_password.jpg', 'banner_search.jpg', 'banner_cart.jpg', 'banner_checkout.jpg', 'banner_product_category.jpg', 'banner_blog.jpg', 'Welcome To Our Ecommerce Website', 'Lorem ipsum dolor sit amet, an labores explicari qui, eu nostrum copiosae argumentum has. Latine propriae quo no, unum ridens expetenda id sit, \r\nat usu eius eligendi singulis. Sea ocurreret principes ne. At nonumy aperiri pri, nam quodsi copiosae intellegebat et, ex deserunt euripidis usu. ', 'Read More', '#', 'cta.jpg', 'Featured Products', 'Our list on Top Featured Products', 'Latest Products', 'Our list of recently added products', 'Popular Products', 'Popular products based on customer\'s choice', 'Testimonials', 'See what our clients tell about us', 'testimonial.jpg', 'Latest Blog', 'See all our latest articles and news from below', 'Sign-up to our newsletter for latest promotions and discounts.', '', '', '', '', '', '', '', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'qr_code_1777533788.png');
 
 -- --------------------------------------------------------
 
@@ -1169,7 +1251,7 @@ CREATE TABLE IF NOT EXISTS `tbl_slider` (
 --
 
 INSERT INTO `tbl_slider` (`id`, `photo`, `heading`, `content`, `button_text`, `button_url`, `position`) VALUES
-(4, 'slider-4.png', 'welcome to new era academy', 'dsdsdsdsd', 'website', 'www.neaschool.edu.np', 'Center');
+(4, 'slider-4.png', 'smart pet collars with AIoT capabilities.', 'Redefining smart pet collars with ultra-low power, global connectivity, and advanced health monitoring for smarter, longer-lasting care.', 'register', 'http://localhost/petpulse-mng/user/register.php', 'Left');
 
 -- --------------------------------------------------------
 
@@ -1223,19 +1305,16 @@ CREATE TABLE IF NOT EXISTS `tbl_subscriber` (
   `subs_hash` varchar(255) NOT NULL,
   `subs_active` int NOT NULL,
   PRIMARY KEY (`subs_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_subscriber`
 --
 
 INSERT INTO `tbl_subscriber` (`subs_id`, `subs_email`, `subs_date`, `subs_date_time`, `subs_hash`, `subs_active`) VALUES
-(1, 'ruth@mail.com', '2022-03-20', '2022-03-20 10:25:18', 'f4eabc1afed38a08da8d1c6e5fb42187', 1),
-(2, 'kimberly@mail.com', '2022-03-20', '2022-03-20 10:26:07', '61f3af9cac686555a4bff9e565f88c47', 1),
-(3, 'gregobn@mail.com', '2022-03-20', '2022-03-20 10:27:21', '72d6fc3a9e9ed33dfc30b10f4de82f34', 1),
-(4, 'morgan.sarahh5@mail.com', '2022-03-20', '2022-03-20 10:27:48', 'bcdeda095a6c882803fc3aaf4a17f08e', 1),
-(5, 'greenwd1154@mail.com', '2022-03-20', '2022-03-20 10:28:09', '279ecfe9debbb091c664641f534857ee', 1),
-(6, 'awsm785@mail.com', '2022-03-20', '2022-03-20 10:28:21', '94096ae01fc65e71c50c7843d096e041', 1);
+(8, 'na66@gmail.com', '2026-05-25', '2026-05-25 12:34:16', '95b3f0841ba773081b50b20c8769eb63', 0),
+(9, 'pandey@gmail.com', '2026-05-25', '2026-05-25 23:41:11', '243519a6a7fd7f59091c55e9a9dd0c9e', 1),
+(10, 'rajan@gmail.com', '2026-05-25', '2026-05-25 23:46:28', 'cb53cc6f95ef4555dade84d4783ecd04', 1);
 
 -- --------------------------------------------------------
 
@@ -1301,18 +1380,15 @@ CREATE TABLE IF NOT EXISTS `vaccinations` (
   `due_date` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `pet_id` (`pet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `vaccinations`
 --
 
 INSERT INTO `vaccinations` (`id`, `pet_id`, `vaccine_name`, `date_given`, `due_date`) VALUES
-(3, 54, 'DHPP (1-year)', '2026-04-01', '2026-04-25'),
-(4, 54, 'DHPP (1-year)', '2026-05-13', '2026-05-31'),
-(5, 54, 'DHPP (1-year)', '2026-05-13', '2026-05-31'),
-(6, 58, 'DHPP (1-year)', '2026-05-14', '2026-05-29'),
-(7, 58, 'test_niraj', '2026-05-14', '2026-05-15');
+(17, 67, 'DHPP (1-year)', '2026-05-18', '2026-05-31'),
+(18, 67, 'halwa', '2026-05-03', '2026-05-12');
 
 DELIMITER $$
 --

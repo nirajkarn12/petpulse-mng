@@ -177,6 +177,18 @@ if(!isset($_SESSION['user'])) {
 			          </a>
 			        </li>
 
+			        <li class="treeview <?php if(in_array($cur_page, ['customer-message.php','customer-message-view.php'], true)) {echo 'active';} ?>">
+			          <a href="customer-message.php">
+			            <i class="fa fa-envelope"></i> <span>Customer Messages</span>
+			          </a>
+			        </li>
+
+			        <li class="treeview <?php if(in_array($cur_page, ['subscriber.php','subscriber-add.php','subscriber-edit.php'], true)) {echo 'active';} ?>">
+			          <a href="subscriber.php">
+			            <i class="fa fa-users"></i> <span>Subscribers</span>
+			          </a>
+			        </li>
+
 
 
       			</ul>

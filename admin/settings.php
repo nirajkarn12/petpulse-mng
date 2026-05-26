@@ -875,11 +875,11 @@ foreach ($result as $row) {
     $banner_product_category         = $row['banner_product_category'];
     $qr_code                         = $row['qr_code'];
    // $banner_blog                     = $row['banner_blog'];
-   // $cta_title                       = $row['cta_title'];
-   // $cta_content                     = $row['cta_content'];
-   // $cta_read_more_text              = $row['cta_read_more_text'];
-  //  $cta_read_more_url               = $row['cta_read_more_url'];
-  //  $cta_photo                       = $row['cta_photo'];
+    $cta_title                       = $row['cta_title'];
+    $cta_content                     = $row['cta_content'];
+    $cta_read_more_text              = $row['cta_read_more_text'];
+    $cta_read_more_url               = $row['cta_read_more_url'];
+    $cta_photo                       = $row['cta_photo'];
     $featured_product_title          = $row['featured_product_title'];
     $featured_product_subtitle       = $row['featured_product_subtitle'];
     $latest_product_title            = $row['latest_product_title'];
@@ -889,8 +889,8 @@ foreach ($result as $row) {
    // $testimonial_title               = $row['testimonial_title'];
    // $testimonial_subtitle            = $row['testimonial_subtitle'];
   //  $testimonial_photo               = $row['testimonial_photo'];
-  //  $blog_title                      = $row['blog_title'];
-   // $blog_subtitle                   = $row['blog_subtitle'];
+    $blog_title                      = $row['blog_title'];
+    $blog_subtitle                   = $row['blog_subtitle'];
     $newsletter_text                 = $row['newsletter_text'];
     $paypal_email                    = $row['paypal_email'];
     $bank_detail                     = $row['bank_detail'];

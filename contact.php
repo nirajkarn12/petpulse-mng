@@ -97,13 +97,49 @@ require_once __DIR__ . '/includes/header.php';
                             <span><?php echo web_h($settings['contact_phone'] ?? ''); ?></span>
                         </div>
                     </div>
-                    <?php if (!empty($settings['contact_map_iframe'])): ?>
-                    <div><?php echo $settings['contact_map_iframe']; ?></div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="container-fluid pt-5">
+<!-- Full Width Map Start -->
+<?php if (!empty($settings['contact_map_iframe'])): ?>
+<div class="full-width-map" style="width: 100%; margin: 0; padding: 0;">
+    <?php 
+    // Extract iframe HTML and force it to be full width & responsive
+    $map_iframe = $settings['contact_map_iframe'];
+    // Add width="100%" if not already present
+    if (preg_match('/<iframe\s+/i', $map_iframe)) {
+        if (!preg_match('/width\s*=\s*["\']/i', $map_iframe)) {
+            $map_iframe = preg_replace('/<iframe/i', '<iframe width="100%"', $map_iframe);
+        } else {
+            $map_iframe = preg_replace('/width\s*=\s*["\'][^"\']*["\']/i', 'width="100%"', $map_iframe);
+        }
+        // Set height (optional, but good for responsiveness)
+        if (!preg_match('/height\s*=\s*["\']/i', $map_iframe)) {
+            $map_iframe = preg_replace('/<iframe/i', '<iframe height="400"', $map_iframe);
+        }
+    }
+    echo $map_iframe;
+    ?>
+</div>
+<style>
+    .full-width-map iframe {
+        display: block;
+        width: 100% !important;
+        height: 400px !important;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+    /* If the iframe has inline styles, override them */
+    .full-width-map {
+        line-height: 0;
+    }
+</style>
+<?php endif; ?>
+<!-- Full Width Map End -->
+</div>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -6,6 +6,12 @@ $meta_description = $settings['meta_description_home'] ?? '';
 $active_nav = 'home';
 require_once __DIR__ . '/includes/header.php';
 
+$page_title = ($page_row['faq_meta_title'] ?? '') ?: 'FAQ - Pet Shop';
+$meta_description = $page_row['faq_meta_description'] ?? '';
+
+
+$faqs = web_fetch_faqs($pdo);
+
 $posts = web_setting_on($settings, 'home_blog_on_off') ? web_fetch_posts($pdo, (int)($settings['total_latest_product_home'] ?? 3) ?: 3) : [];
 if (empty($posts) && web_setting_on($settings, 'home_blog_on_off')) {
     $posts = web_fetch_posts($pdo, 3);
@@ -180,5 +186,71 @@ $show_welcome = web_setting_on($settings, 'home_welcome_on_off');
 </div>
 <!-- Blog End -->
 <?php endif; ?>
+
+
+<div class="container-fluid py-5">
+    <div class="container">
+    <div class="border-start border-5 border-primary ps-5 mb-5" style="max-width: 600px;">
+            <h6 class="text-primary text-uppercase">Common Questions</h6>
+            <h1 class="display-5 text-uppercase mb-0"><?php echo web_h($settings['faq_main_heading'] ?? 'FAQ'); ?></h1>
+        </div>
+        <?php if (empty($faqs)): ?>
+        <p class="text-center text-muted py-5">No FAQs available yet.</p>
+        <?php else: ?>
+        <div class="accordion" id="faqAccordion">
+            <?php foreach ($faqs as $i => $faq): ?>
+            <div class="accordion-item border-0 mb-3">
+                <h2 class="accordion-header" id="faq-h-<?php echo (int)$faq['faq_id']; ?>">
+                    <button class="accordion-button <?php echo $i > 0 ? 'collapsed' : ''; ?> bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faq-c-<?php echo (int)$faq['faq_id']; ?>">
+                        <?php echo web_h($faq['faq_title']); ?>
+                    </button>
+                </h2>
+                <div id="faq-c-<?php echo (int)$faq['faq_id']; ?>" class="accordion-collapse collapse <?php echo $i === 0 ? 'show' : ''; ?>" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-body"><?php echo $faq['faq_content']; ?></div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- Full Width Map Start -->
+<?php if (!empty($settings['contact_map_iframe'])): ?>
+<div class="full-width-map" style="width: 100%; margin: 0; padding: 0;">
+    <?php 
+    // Extract iframe HTML and force it to be full width & responsive
+    $map_iframe = $settings['contact_map_iframe'];
+    // Add width="100%" if not already present
+    if (preg_match('/<iframe\s+/i', $map_iframe)) {
+        if (!preg_match('/width\s*=\s*["\']/i', $map_iframe)) {
+            $map_iframe = preg_replace('/<iframe/i', '<iframe width="100%"', $map_iframe);
+        } else {
+            $map_iframe = preg_replace('/width\s*=\s*["\'][^"\']*["\']/i', 'width="100%"', $map_iframe);
+        }
+        // Set height (optional, but good for responsiveness)
+        if (!preg_match('/height\s*=\s*["\']/i', $map_iframe)) {
+            $map_iframe = preg_replace('/<iframe/i', '<iframe height="400"', $map_iframe);
+        }
+    }
+    echo $map_iframe;
+    ?>
+</div>
+<style>
+    .full-width-map iframe {
+        display: block;
+        width: 100% !important;
+        height: 400px !important;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+    /* If the iframe has inline styles, override them */
+    .full-width-map {
+        line-height: 0;
+    }
+</style>
+<?php endif; ?>
+<!-- Full Width Map End -->
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

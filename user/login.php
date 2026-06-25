@@ -230,6 +230,10 @@ input:focus{
             <input type="password" name="password" placeholder="Password" required>
         </div>
 
+        <div class="form-group" style="text-align: right; margin-bottom: 20px;">
+            <a href="forget-password.php" style="color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500;">Forgot Password?</a>
+        </div>
+
         <button type="submit" name="form1" class="btn">
             Login
         </button>

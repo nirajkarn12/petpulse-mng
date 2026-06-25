@@ -6,6 +6,17 @@ $meta_description = $settings['meta_description_home'] ?? '';
 $active_nav = 'home';
 require_once __DIR__ . '/includes/header.php';
 
+$whatsapp_phone_raw = $settings['contact_phone'] ?? '+977 9800000000';
+$whatsapp_phone = preg_replace('/\D+/', '', $whatsapp_phone_raw);
+if (!empty($whatsapp_phone)):
+    $whatsapp_url = 'https://wa.me/' . $whatsapp_phone . '?text=' . urlencode('Hello, I would like to know more about your pet services.');
+?>
+<a href="<?php echo web_h($whatsapp_url); ?>" class="whatsapp-float" target="_blank" rel="noreferrer noopener">
+    <i class="bi bi-whatsapp"></i>
+</a>
+<?php
+endif;
+
 $page_title = ($page_row['faq_meta_title'] ?? '') ?: 'FAQ - Pet Shop';
 $meta_description = $page_row['faq_meta_description'] ?? '';
 
